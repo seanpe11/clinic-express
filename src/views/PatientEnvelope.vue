@@ -1,7 +1,7 @@
 <template>
   <div class="patient">
     <div class="row">
-      <Sidebar/>
+      <Sidebar :name='name' :links='links'/>
       <div id="content" class='col-10'>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -11,7 +11,13 @@
           Basic Information
         </div>
         <button class='mb-25'><div class='add-btn'>+ Add New Visit</div></button>
-        <div class="rectangle mg-25">Friday - August 13, 2020</div>
+        <!-- FOR LOOP FOR VISITS -->
+        <div v-for="visit in visits" :key='visit.date'>
+          <!-- TODO: change :key to the visitID -->
+          <router-link to='/patient/visit'>
+            <div class="rectangle mb-25">{{visit.date}}</div>
+          </router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -25,6 +31,24 @@ export default {
   components: {
     Sidebar,
   },
+  data: () => ({
+    // replace this with the mongodb query result
+    name: {
+      firstname: 'Juan',
+      lastname: 'Dela Cruz',
+    },
+    links: [
+      {
+        name: 'Summary Statistics',
+        dest: '/statistics',
+      },
+    ],
+    visits: [
+      { date: 'Friday - August 13, 2020' },
+      { date: 'Friday - August 13, 2021' },
+      { date: 'Friday - August 13, 2020' },
+    ],
+  }),
 };
 
 </script>
@@ -39,11 +63,12 @@ button {
   padding: .25in .5in;
 }
 
-.mb-25 {
-  margin-bottom: .25in;
-}
-
 .breadcrumb {
   background: transparent;
+}
+
+a > .rectangle:hover {
+  box-shadow: none;
+  color: black;
 }
 </style>

@@ -1,14 +1,17 @@
 <template>
   <div class="home">
     <div class="row">
-      <Sidebar/>
+      <Sidebar name="null" :links='links'/>
       <div id="content" class='col-10'>
         <!-- search field -->
         <input type="text" class='search' placeholder='search patient envelopes'>
 
+        <!-- add new visit button -->
+        <button class='mb-25'><div class='add-btn'>+ Add New Patient</div></button>
         <!-- FOR LOOP FOR PATIENT -->
-        <router-link to='/patient' class='router-link'>
-          <div v-for="patient in patients" :key='patient.name'>
+        <div v-for="patient in patients" :key='patient.name'>
+          <!-- TODO: change :key to the patientID -->
+          <router-link to='/patient' class='router-link'>
             <div class="rectangle patient">
               <div class="name">{{patient.name}}</div>
               <div class="lastVisit">
@@ -16,12 +19,9 @@
                 {{patient.lastVisit}}
               </div>
             </div>
-          </div>
-        </router-link>
+          </router-link>
+        </div>
         <!-- END LOOP -->
-
-        <!-- add new visit button -->
-        <button class='mb-25'><div class='add-btn'>+ Add New Patient</div></button>
       </div>
     </div>
   </div>
@@ -38,6 +38,12 @@ export default {
   },
   data: () => ({
     // replace this array to the results of a mongodb query
+    links: [
+      {
+        name: 'Summary Statistics',
+        dest: '/statistics',
+      },
+    ],
     patients: [
       {
         name: 'Juan Dela Cruz',

@@ -19,8 +19,16 @@ a {
     color: black;
 }
 
+a:hover {
+    color: #35B4FE
+}
+
 input:focus, textarea:focus, select:focus, button:focus{
     outline: none;
+}
+
+.mb-25 {
+    margin-bottom: .25in;
 }
 
 footer {
