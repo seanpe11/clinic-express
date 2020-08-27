@@ -18,17 +18,10 @@
   },
   "homepage": "https://github.com/jolocansana/clinic-express#readme",
   "dependencies": {
-<<<<<<< HEAD
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongodb": "^3.6.0"
-=======
-    "core-js": "^3.6.5",
-    "multer-gridfs-storage": "^4.2.0",
-    "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
->>>>>>> 569a7fd62a2f87f9a4b04978a5b2e25a3db40dbb
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
