@@ -6,8 +6,46 @@
         <!-- search field -->
         <input type="text" class='search' placeholder='search patient envelopes'>
 
-        <!-- add new visit button -->
-        <button class='mb-25'><div class='add-btn'>+ Add New Patient</div></button>
+        <!-- add new patient button -->
+        <button type="button" class="mb-25" data-toggle="modal" data-target="#patientModal">
+        <div class='add-btn'>+ Add New Patient </div></button>
+
+        <!-- add new patient modal -->
+        <div class="modal" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="patientModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="patientModalLabel">Add New Patient</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <!-- patient information modal -->
+                <form>
+                  <td><label for="patientName">Name: <input class="inputbox" type="text" name="patientName" required></label></td><br>
+
+                  <td><label for="patientAge">Age: <input id="agebox" type="text" name="patientAge" required></label>
+                  
+                  <label class="radiospacing" for="patientSex">Sex: 
+                  <label><input type="radio" name="patientSex" value="male" required>Male</label>
+                  <label><input type="radio" name="patientSex" value="female">Female</label></label>
+                  </td><br>
+
+                  <td><label for="patientAddress">Address: <input class="inputbox" type="text" name="patientAddress" required></label></td><br>
+
+                  <label for="patientOccupation">Occupation: <input class="inputbox" type="text" name="patientOccupation" required></label>
+                  
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="mb-25" data-dismiss="modal">Close</button>
+                <button type="button" class="mb-25">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- FOR LOOP FOR PATIENT -->
         <div v-for="patient in patients" :key='patient.name'>
           <!-- TODO: change :key to the patientID -->
@@ -141,4 +179,59 @@ button {
 #content {
     padding: .25in .5in;
 }
+
+/* Modal style */
+
+.modal-title {
+  font-style: normal;
+  font-weight: bold;
+  line-height: 35px;
+  display: flex;
+  align-items: center;
+
+  color: #000000;
+}
+
+.modal-content {
+  background: #F1F1F1;
+}
+
+.modal-body {
+  width: 500px;
+  height: 225px;
+}
+
+.radiospacing {
+  margin-left: .5in;
+}
+
+.inputbox {
+  width: 337px;
+  height: 30px;
+    
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border: 0px;
+  border-radius: 10px;
+}
+
+#agebox {
+  width: 50px;
+  height: 30px;
+
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border: 0px;
+  border-radius: 10px;
+}
+
+.modal-footer > button {
+  width: 100px;
+  height: 25px;
+
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
 </style>
