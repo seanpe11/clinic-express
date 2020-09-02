@@ -43,16 +43,24 @@
           </ul>
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="subjective" role="tabpanel" aria-labelledby="home-tab">
-              {{soap.subjective}}
+              <div class="form-group">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.subjective"></textarea>
+              </div>
             </div>
             <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="profile-tab">
-              {{soap.objective}}
+              <div class="form-group">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.objective"></textarea>
+              </div>
             </div>
             <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="contact-tab">
-              {{soap.assessment}}
+              <div class="form-group">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.assessment"></textarea>
+              </div>
             </div>
             <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="contact-tab">
-              {{soap.plan}}
+              <div class="form-group">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.plan"></textarea>
+              </div>
             </div>
           </div>
         </div>
@@ -106,6 +114,10 @@ export default {
 </script>
 
 <style scoped>
+textarea {
+  /* resize: none; */
+  resize: vertical;
+}
 
 #content {
   padding: .25in .5in;

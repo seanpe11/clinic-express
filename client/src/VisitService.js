@@ -21,6 +21,8 @@ class VisitService {
       }
     });
   }
+
+  // TODO: Add update visit @Sean
 }
 
 export default VisitService;

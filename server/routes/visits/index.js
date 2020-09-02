@@ -34,4 +34,9 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// TODO: Add update request handler @Sean
+router.post('/:id', async (req, res) => {
+    // Code here
+});
+
 module.exports = router;

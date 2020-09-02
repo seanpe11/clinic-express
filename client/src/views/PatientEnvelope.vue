@@ -31,7 +31,7 @@
             </div>
           </div>
         </div>
-        <button class='mb-25 default'><div class='add-btn' type="button" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
+        <button class='mb-25 default'><div class='add-btn' type="button" @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
         <!-- FOR LOOP FOR VISITS -->
         <div v-for="visit in visits" :key='visit._id'>
           <!-- TODO: change :key to the visitID -->
@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="addVisitModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="addVisitModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -95,7 +95,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -154,10 +154,10 @@ export default {
     async saveVisit() {
       this.errorMessage = '';
       const newVisit = {
-        subject: this.subject,
-        object: this.object,
-        assessment: this.assessment,
-        plan: this.plan,
+        subject: '',
+        object: '',
+        assessment: '',
+        plan: '',
         patient: this.id,
       };
       VisitService.createVisit(newVisit).then(() => {
