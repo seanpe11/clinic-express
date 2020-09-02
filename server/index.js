@@ -1,13 +1,7 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const app = require('./startup/express');
 
-const app = express();
+require('./startup/db');
 
-// All the middleware
-app.use(bodyParser.json());
-app.use(cors());
+const PORT = process.env.PORT || 5000;
 
-const port = process.env.PORT || 5000;
-
-app.listen(port, () => console.log(`Server started on port ${port}`));
+app.listen(PORT, () => console.log(`Listening to port ${PORT}`));

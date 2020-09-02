@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:3000/api/visits';
+const url = 'http://localhost:5000/api/visits';
 
 class VisitService {
   static createVisit(body) {
