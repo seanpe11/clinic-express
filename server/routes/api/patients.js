@@ -22,6 +22,18 @@ router.get('/', (req, res) => {
  * @return patientEnvelope(json)
  */
 
+ router.get('/testList', (req, res) => {
+     res.status(200).send([
+        { name: 'Juan Deag',
+          lastVisit: 'August 30, 2020',
+        },
+        {
+          name: 'Juanita Deag',
+          lastVisit: 'August 30, 2020',
+        },
+      ])
+ })
+
 // Update Patient
 
 // Delete Patient

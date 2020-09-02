@@ -24,18 +24,13 @@
                 <!-- patient information modal -->
                 <form>
                   <td><label for="patientName">Name: <input class="inputbox" type="text" name="patientName" required></label></td><br>
-
                   <td><label for="patientAge">Age: <input id="agebox" type="text" name="patientAge" required></label>
-                  
-                  <label class="radiospacing" for="patientSex">Sex: 
+                  <label class="radiospacing" for="patientSex">Sex:></label>
                   <label><input type="radio" name="patientSex" value="male" required>Male</label>
-                  <label><input type="radio" name="patientSex" value="female">Female</label></label>
+                  <label><input type="radio" name="patientSex" value="female">Female</label>
                   </td><br>
-
                   <td><label for="patientAddress">Address: <input class="inputbox" type="text" name="patientAddress" required></label></td><br>
-
                   <label for="patientOccupation">Occupation: <input class="inputbox" type="text" name="patientOccupation" required></label>
-                  
                 </form>
               </div>
               <div class="modal-footer">
@@ -68,71 +63,35 @@
 <script>
 // @ is an alias to /src
 import Sidebar from '@/components/Sidebar.vue';
+import PatientService from '../PatientService';
 
 export default {
   name: 'Home',
   components: {
     Sidebar,
   },
-  data: () => ({
+  data() {
     // replace this array to the results of a mongodb query
-    links: [
-      {
-        name: 'Summary Statistics',
-        dest: '/statistics',
-      },
-    ],
-    patients: [
-      {
-        name: 'Juan Dela Cruz',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'Juanita Dela Cruz',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'John Doe',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'Jeremiah Johnson',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'Juan Dela Cruz',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'Juanita Dela Cruz',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'John Doe',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'Jeremiah Johnson',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'Juan Dela Cruz',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'Juanita Dela Cruz',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'John Doe',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-      {
-        name: 'Jeremiah Johnson',
-        lastVisit: 'August 13, 2020, Friday',
-      },
-    ],
-  }),
+    return {
+      links: [
+        {
+          name: 'Summary Statistics',
+          dest: '/statistics',
+        },
+      ],
+      patients: [],
+    };
+  },
+  created() {
+    PatientService.getPatients()
+      .then((response) => {
+        this.patients = response.data;
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  },
 };
 </script>
 
@@ -208,7 +167,6 @@ button {
 .inputbox {
   width: 337px;
   height: 30px;
-    
   background: #FFFFFF;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border: 0px;
