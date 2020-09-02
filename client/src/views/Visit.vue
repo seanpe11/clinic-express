@@ -6,12 +6,12 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item" aria-current="page">
-            <a href="/patient">Patient Envelope</a>
+            <a :href="'/patients/envelope/' + id ">Patient Envelope</a>
           </li>
           <li class="breadcrumb-item active" aria-current="page">Visit Record</li>
         </ol>
         <div class="rectangle mb-25">
-          Friday - August 13, 2020
+          <h3>{{ visit_date }}</h3>
         </div>
         <div class="rectangle mg-25">
           <h2 class='mb-25'>SOAP File</h2>
@@ -64,6 +64,8 @@
 <script>
 /* eslint-env jquery */
 import Sidebar from '@/components/Sidebar.vue';
+import moment from 'moment';
+import VisitService from '../VisitService';
 
 export default {
   name: 'Visit',
@@ -72,6 +74,8 @@ export default {
   },
   data: () => ({
     // replace this with the mongodb query result
+    id: '',
+    visit_id: '',
     links: [
       {
         name: 'Supporting Files',
@@ -84,7 +88,19 @@ export default {
       assessment: 'Assessment',
       plan: 'Plan',
     },
+    visit_date: '-',
   }),
+  async created() {
+    this.id = this.$route.params.id;
+    this.visit_id = this.$route.params.visit_id;
+    VisitService.getVisitDetails(this.visit_id).then((visit) => {
+      this.visit_date = moment(visit.createdAt).format('LLL');
+      this.soap.subjective = visit.subject;
+      this.soap.objective = visit.object;
+      this.soap.assessment = visit.assessment;
+      this.soap.plan = visit.plan;
+    });
+  },
 };
 
 </script>

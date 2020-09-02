@@ -2,7 +2,7 @@
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import supportFileView from '../views/Home.vue'; // Need to Change
+import supportFileView from '../views/SupportFiles.vue'; // Need to Change
 
 const express = require('express');
 const multer = require('multer');
