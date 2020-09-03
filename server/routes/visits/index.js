@@ -34,9 +34,26 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// TODO: Add update request handler @Sean
-router.post('/:id', async (req, res) => {
+router.post('/:id/:soap', async (req, res) => {
     // Code here
+    try {
+        let visit = await Visit.findOne( { _id: req.params.id });
+        if (!visit) return res.status(400).json('Visit not found');
+
+        visit[req.params.soap] = req.body.text;
+
+        await visit.save();
+
+        res.status(200).send('ok');
+    } catch (err) {
+        console.log(err)
+        return res.status(500)
+    }
 });
+
+router.post('/testingthejuicer', (req, res) => {
+    console.log(req.body.text)
+    res.status(200).send('it worked')
+})
 
 module.exports = router;

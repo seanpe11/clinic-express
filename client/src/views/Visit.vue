@@ -46,21 +46,25 @@
               <div class="form-group">
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.subjective"></textarea>
               </div>
+              <div class="btn btn-primary">Edit Subjective</div>
             </div>
             <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="profile-tab">
               <div class="form-group">
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.objective"></textarea>
               </div>
+              <div class="btn btn-primary">Edit Objective</div>
             </div>
             <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="contact-tab">
               <div class="form-group">
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.assessment"></textarea>
               </div>
+              <div class="btn btn-primary">Edit Assessment</div>
             </div>
             <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="contact-tab">
               <div class="form-group">
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.plan"></textarea>
               </div>
+              <div class="btn btn-primary">Edit Plan</div>
             </div>
           </div>
         </div>
@@ -108,6 +112,12 @@ export default {
       this.soap.assessment = visit.assessment;
       this.soap.plan = visit.plan;
     });
+  },
+  methods: {
+    // TO DO implement update function from VisitService
+    updateVisit() {
+
+    },
   },
 };
 
