@@ -41,30 +41,37 @@
               </a>
             </li>
           </ul>
-          <div class="tab-content" id="myTabContent">
+          <div class="tab-content" style="min-height: 70%" id="myTabContent">
             <div class="tab-pane fade show active" id="subjective" role="tabpanel" aria-labelledby="home-tab">
               <div class="form-group">
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.subjective"></textarea>
+                <textarea class="form-control" id="formSub" rows="10" v-model="soap.subject" readonly></textarea>
               </div>
-              <div class="btn btn-primary">Edit Subjective</div>
+              <div class="my-3" id="editSub">
+                <div class="btn btn-primary" id="editS" v-on:click="edit('Sub')">Edit Subjective</div>
+              </div>
+              <div class="my-3" id="editingSub">
+                <div class="btn btn-warning" v-on:click="cancel('Sub')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Sub')">Save</div>
+              </div>
             </div>
             <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="profile-tab">
               <div class="form-group">
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.objective"></textarea>
+                <textarea class="form-control" id="objectForm" rows="10" v-model="soap.object" readonly></textarea>
               </div>
-              <div class="btn btn-primary">Edit Objective</div>
             </div>
             <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="contact-tab">
               <div class="form-group">
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.assessment"></textarea>
+                <textarea class="form-control" id="assessForm" rows="10" v-model="soap.assess" readonly></textarea>
               </div>
-              <div class="btn btn-primary">Edit Assessment</div>
+              <div class="btn btn-primary" v-on:click="edit('assessForm')">Edit Assessment</div>
+              <div class="btn btn-success">Save</div>
             </div>
             <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="contact-tab">
               <div class="form-group">
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" v-model="soap.plan"></textarea>
+                <textarea class="form-control" id="planForm" rows="10" v-model="soap.plan" readonly></textarea>
               </div>
-              <div class="btn btn-primary">Edit Plan</div>
+              <div class="btn btn-primary" v-on:click="edit('planForm')">Edit Plan</div>
+              <div class="btn btn-success">Save</div>
             </div>
           </div>
         </div>
@@ -101,23 +108,51 @@ export default {
       plan: 'Plan',
     },
     visit_date: '-',
+    visit: {},
   }),
   async created() {
-    this.id = this.$route.params.id;
-    this.visit_id = this.$route.params.visit_id;
-    VisitService.getVisitDetails(this.visit_id).then((visit) => {
-      this.visit_date = moment(visit.createdAt).format('LLL');
-      this.soap.subjective = visit.subject;
-      this.soap.objective = visit.object;
-      this.soap.assessment = visit.assessment;
-      this.soap.plan = visit.plan;
-    });
+    this.loadData();
+  },
+  mounted() {
+    $('#editingSub').hide();
+    $('#editingObj').hide();
+    $('#editingAss').hide();
+    $('#editingPla').hide();
   },
   methods: {
-    // TO DO implement update function from VisitService
-    updateVisit() {
-
+    // Reloads data from API
+    async loadData() {
+      this.id = this.$route.params.id;
+      this.visit_id = this.$route.params.visit_id;
+      VisitService.getVisitDetails(this.visit_id).then((visit) => {
+        this.visit_date = moment(visit.createdAt).format('LLL');
+        this.soap = visit;
+      });
     },
+    // Front-end crud
+    edit(section) {
+      $(`#form${section}`).prop('readonly', false);
+      $(`#edit${section}`).hide();
+      $(`#editing${section}`).show();
+    },
+    cancel(section) {
+      $(`#form${section}`).prop('readonly', true);
+      $(`#edit${section}`).show();
+      $(`#editing${section}`).hide();
+      this.loadData();
+      console.log(this.soap);
+    },
+    // Send to DB, also front-end change
+    async save(section) {
+      $(`#form${section}`).prop('readonly', true);
+      $(`#edit${section}`).show();
+      $(`#editing${section}`).hide();
+      VisitService.updateVisit(this.visit_id, this.soap)
+        .then(() => {
+          this.loadData();
+        });
+    },
+
   },
 };
 

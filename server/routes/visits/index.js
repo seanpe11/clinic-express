@@ -34,13 +34,16 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/:id/:soap', async (req, res) => {
+router.post('/:id', async (req, res) => {
     // Code here
     try {
         let visit = await Visit.findOne( { _id: req.params.id });
         if (!visit) return res.status(400).json('Visit not found');
 
-        visit[req.params.soap] = req.body.text;
+        visit.subject = req.body.subject;
+        visit.object = req.body.object;
+        visit.assessment = req.body.assessment;
+        visit.plan = req.body.plan;
 
         await visit.save();
 

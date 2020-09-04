@@ -23,6 +23,9 @@ class VisitService {
   }
 
   // TODO: Add update visit @Sean
+  static updateVisit(id, data) {
+    return axios.post(`${url}/${id}`, data);
+  }
 }
 
 export default VisitService;
