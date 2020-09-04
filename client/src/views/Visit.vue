@@ -12,6 +12,7 @@
         </ol>
         <div class="rectangle mb-25">
           <h3>{{ visit_date }}</h3>
+          <div class="btn btn-danger" @click="deleteVisit">Delete Visit</div>
         </div>
         <div class="rectangle mg-25">
           <h2 class='mb-25'>SOAP File</h2>
@@ -42,7 +43,7 @@
             </li>
           </ul>
           <div class="tab-content" style="min-height: 70%" id="myTabContent">
-            <div class="tab-pane fade show active" id="subjective" role="tabpanel" aria-labelledby="home-tab">
+            <div class="tab-pane fade show active" id="subjective" role="tabpanel" aria-labelledby="subjective-tab">
               <div class="form-group">
                 <textarea class="form-control" id="formSub" rows="10" v-model="soap.subject" readonly></textarea>
               </div>
@@ -54,24 +55,41 @@
                 <div class="btn btn-success mx-2" v-on:click="save('Sub')">Save</div>
               </div>
             </div>
-            <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="objective-tab">
               <div class="form-group">
-                <textarea class="form-control" id="objectForm" rows="10" v-model="soap.object" readonly></textarea>
+                <textarea class="form-control" id="formObj" rows="10" v-model="soap.object" readonly></textarea>
+              </div>
+              <div class="my-3" id="editObj">
+                <div class="btn btn-primary" v-on:click="edit('Obj')">Edit Objective</div>
+              </div>
+              <div class="my-3" id="editingObj">
+                <div class="btn btn-warning" v-on:click="cancel('Obj')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Obj')">Save</div>
               </div>
             </div>
-            <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="assessment-tab">
               <div class="form-group">
-                <textarea class="form-control" id="assessForm" rows="10" v-model="soap.assess" readonly></textarea>
+                <textarea class="form-control" id="formAss" rows="10" v-model="soap.assessment" readonly></textarea>
               </div>
-              <div class="btn btn-primary" v-on:click="edit('assessForm')">Edit Assessment</div>
-              <div class="btn btn-success">Save</div>
+              <div class="my-3" id="editAss">
+                <div class="btn btn-primary" v-on:click="edit('Ass')">Edit Assessment</div>
+              </div>
+              <div class="my-3" id="editingAss">
+                <div class="btn btn-warning" v-on:click="cancel('Ass')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Ass')">Save</div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="plan-tab">
               <div class="form-group">
-                <textarea class="form-control" id="planForm" rows="10" v-model="soap.plan" readonly></textarea>
+                <textarea class="form-control" id="formPla" rows="10" v-model="soap.plan" readonly></textarea>
               </div>
-              <div class="btn btn-primary" v-on:click="edit('planForm')">Edit Plan</div>
-              <div class="btn btn-success">Save</div>
+              <div class="my-3" id="editPla">
+                <div class="btn btn-primary" v-on:click="edit('Pla')">Edit Plan</div>
+              </div>
+              <div class="my-3" id="editingPla">
+                <div class="btn btn-warning" v-on:click="cancel('Pla')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Pla')">Save</div>
+              </div>
             </div>
           </div>
         </div>
@@ -102,8 +120,8 @@ export default {
       },
     ],
     soap: {
-      subjective: 'Subjective',
-      objective: 'Objective',
+      subject: 'Subjective',
+      object: 'Objective',
       assessment: 'Assessment',
       plan: 'Plan',
     },
@@ -152,7 +170,9 @@ export default {
           this.loadData();
         });
     },
-
+    deleteVisit() {
+      VisitService.deleteVisit(this.visit_id);
+    },
   },
 };
 

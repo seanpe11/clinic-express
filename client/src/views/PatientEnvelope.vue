@@ -7,7 +7,8 @@
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item active" aria-current="page">Patient Envelope</li>
         </ol>
-        <div class="rectangle mb-25">
+        <!-- Basic Information -->
+        <div class="rectangle mb-25" id="patientInfo">
           Basic Information
           <div class="container mt-5">
             <div class="row">
@@ -30,6 +31,34 @@
               </div>
             </div>
           </div>
+          <button class='mb-25 default'><div class='add-btn' v-on:click='edit' type="button">Edit Patient Info</div></button>
+        </div>
+        <!-- Edit patient form -->
+        <div class="rectangle mb-25" id="editPatientInfo">
+          Editing Information
+          <div class="container mt-5">
+            <div class="row">
+              <div class="col-lg-6">
+                <h3>Name: {{ name }} </h3>
+              </div>
+              <div class="col-lg-3">
+                <h3>Sex: {{ sex }}</h3>
+              </div>
+              <div class="col-lg-3">
+                <h3>Age: {{ age }}</h3>
+              </div>
+            </div>
+            <div class="row mt-4 mb-5">
+              <div class="col-lg-6">
+                <h3>Address: {{ address }} </h3>
+              </div>
+              <div class="col-lg-6">
+                <h3>Occupation: {{ occupation }} </h3>
+              </div>
+            </div>
+          </div>
+          <button class='mb-25 default'><div class='add-btn' type="button" @click="cancel">Cancel</div></button>
+          <button class='mb-25 default'><div class='add-btn' type="button" @click="saveInfo">Save</div></button>
         </div>
         <button class='mb-25 default'><div class='add-btn' type="button" @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
         <!-- FOR LOOP FOR VISITS -->
@@ -135,20 +164,10 @@ export default {
   }),
   async created() {
     this.id = this.$route.params.id;
-    try {
-      const data = await PatientService.fetchPatientProfile(this.id);
-      this.name = data.name;
-      this.age = data.age;
-      this.sex = data.sex;
-      this.address = (data.address) ? data.address : 'N/A';
-      this.occupation = (data.occupation) ? data.occupation : 'N/A';
-      this.visits = data.visits;
-      $('#objectCard').hide();
-      $('#assessmentCard').hide();
-      $('#planCard').hide();
-    } catch (err) {
-      alert('error');
-    }
+  },
+  mounted() {
+    this.loadData();
+    $('#editPatientInfo').hide();
   },
   methods: {
     async saveVisit() {
@@ -161,8 +180,36 @@ export default {
         patient: this.id,
       };
       VisitService.createVisit(newVisit).then(() => {
-        document.location.reload();
+        this.loadData();
       });
+    },
+    edit() {
+      $('#patientInfo').hide();
+      $('#editPatientInfo').show();
+    },
+    cancel() {
+      $('#patientInfo').show();
+      $('#editPatientInfo').hide();
+      this.loadData();
+    },
+    saveInfo() {
+      // to do
+    },
+    async loadData() {
+      try {
+        const data = await PatientService.fetchPatientProfile(this.id);
+        this.name = data.name;
+        this.age = data.age;
+        this.sex = data.sex;
+        this.address = (data.address) ? data.address : 'N/A';
+        this.occupation = (data.occupation) ? data.occupation : 'N/A';
+        this.visits = data.visits.reverse();
+        $('#objectCard').hide();
+        $('#assessmentCard').hide();
+        $('#planCard').hide();
+      } catch (err) {
+        console.log('error');
+      }
     },
   },
   watch: {
