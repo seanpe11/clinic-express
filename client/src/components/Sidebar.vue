@@ -5,7 +5,7 @@
 
             <div v-if="name != 'null'" id="name">
                 <span>Patient Name</span>
-                <h3>{{name.firstname}}<br/>{{name.lastname}}</h3>
+                <h3>{{ name }}</h3>
             </div>
 
             <div id="links">

@@ -6,12 +6,13 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item" aria-current="page">
-            <a href="/patient">Patient Envelope</a>
+            <a :href="'/patients/envelope/' + id ">Patient Envelope</a>
           </li>
           <li class="breadcrumb-item active" aria-current="page">Visit Record</li>
         </ol>
         <div class="rectangle mb-25">
-          Friday - August 13, 2020
+          <h3>{{ visit_date }}</h3>
+          <div class="btn btn-danger" @click="deleteVisit">Delete Visit</div>
         </div>
         <div class="rectangle mg-25">
           <h2 class='mb-25'>SOAP File</h2>
@@ -41,18 +42,54 @@
               </a>
             </li>
           </ul>
-          <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="subjective" role="tabpanel" aria-labelledby="home-tab">
-              {{soap.subjective}}
+          <div class="tab-content" style="min-height: 70%" id="myTabContent">
+            <div class="tab-pane fade show active" id="subjective" role="tabpanel" aria-labelledby="subjective-tab">
+              <div class="form-group">
+                <textarea class="form-control" id="formSub" rows="10" v-model="soap.subject" readonly></textarea>
+              </div>
+              <div class="my-3" id="editSub">
+                <div class="btn btn-primary" id="editS" v-on:click="edit('Sub')">Edit Subjective</div>
+              </div>
+              <div class="my-3" id="editingSub">
+                <div class="btn btn-warning" v-on:click="cancel('Sub')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Sub')">Save</div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="profile-tab">
-              {{soap.objective}}
+            <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="objective-tab">
+              <div class="form-group">
+                <textarea class="form-control" id="formObj" rows="10" v-model="soap.object" readonly></textarea>
+              </div>
+              <div class="my-3" id="editObj">
+                <div class="btn btn-primary" v-on:click="edit('Obj')">Edit Objective</div>
+              </div>
+              <div class="my-3" id="editingObj">
+                <div class="btn btn-warning" v-on:click="cancel('Obj')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Obj')">Save</div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="contact-tab">
-              {{soap.assessment}}
+            <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="assessment-tab">
+              <div class="form-group">
+                <textarea class="form-control" id="formAss" rows="10" v-model="soap.assessment" readonly></textarea>
+              </div>
+              <div class="my-3" id="editAss">
+                <div class="btn btn-primary" v-on:click="edit('Ass')">Edit Assessment</div>
+              </div>
+              <div class="my-3" id="editingAss">
+                <div class="btn btn-warning" v-on:click="cancel('Ass')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Ass')">Save</div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="contact-tab">
-              {{soap.plan}}
+            <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="plan-tab">
+              <div class="form-group">
+                <textarea class="form-control" id="formPla" rows="10" v-model="soap.plan" readonly></textarea>
+              </div>
+              <div class="my-3" id="editPla">
+                <div class="btn btn-primary" v-on:click="edit('Pla')">Edit Plan</div>
+              </div>
+              <div class="my-3" id="editingPla">
+                <div class="btn btn-warning" v-on:click="cancel('Pla')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Pla')">Save</div>
+              </div>
             </div>
           </div>
         </div>
@@ -64,6 +101,8 @@
 <script>
 /* eslint-env jquery */
 import Sidebar from '@/components/Sidebar.vue';
+import moment from 'moment';
+import VisitService from '../VisitService';
 
 export default {
   name: 'Visit',
@@ -72,6 +111,8 @@ export default {
   },
   data: () => ({
     // replace this with the mongodb query result
+    id: '',
+    visit_id: '',
     links: [
       {
         name: 'Supporting Files',
@@ -79,17 +120,69 @@ export default {
       },
     ],
     soap: {
-      subjective: 'Subjective',
-      objective: 'Objective',
+      subject: 'Subjective',
+      object: 'Objective',
       assessment: 'Assessment',
       plan: 'Plan',
     },
+    visit_date: '-',
+    visit: {},
   }),
+  async created() {
+    this.loadData();
+  },
+  mounted() {
+    $('#editingSub').hide();
+    $('#editingObj').hide();
+    $('#editingAss').hide();
+    $('#editingPla').hide();
+  },
+  methods: {
+    // Reloads data from API
+    async loadData() {
+      this.id = this.$route.params.id;
+      this.visit_id = this.$route.params.visit_id;
+      VisitService.getVisitDetails(this.visit_id).then((visit) => {
+        this.visit_date = moment(visit.createdAt).format('LLL');
+        this.soap = visit;
+      });
+    },
+    // Front-end crud
+    edit(section) {
+      $(`#form${section}`).prop('readonly', false);
+      $(`#edit${section}`).hide();
+      $(`#editing${section}`).show();
+    },
+    cancel(section) {
+      $(`#form${section}`).prop('readonly', true);
+      $(`#edit${section}`).show();
+      $(`#editing${section}`).hide();
+      this.loadData();
+      console.log(this.soap);
+    },
+    // Send to DB, also front-end change
+    async save(section) {
+      $(`#form${section}`).prop('readonly', true);
+      $(`#edit${section}`).show();
+      $(`#editing${section}`).hide();
+      VisitService.updateVisit(this.visit_id, this.soap)
+        .then(() => {
+          this.loadData();
+        });
+    },
+    deleteVisit() {
+      VisitService.deleteVisit(this.visit_id);
+    },
+  },
 };
 
 </script>
 
 <style scoped>
+textarea {
+  /* resize: none; */
+  resize: vertical;
+}
 
 #content {
   padding: .25in .5in;

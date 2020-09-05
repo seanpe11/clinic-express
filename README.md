@@ -8,12 +8,12 @@ npm install
 ## Server-side
 To open for production:
 ```
-npm start
+npm run start
 ```
 
 To open for development:
 ```
-npm dev
+npm run dev
 ```
 
 ## Client-side
