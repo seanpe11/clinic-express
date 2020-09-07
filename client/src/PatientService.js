@@ -31,6 +31,19 @@ class PatientService {
     return axios.post(url, body);
   }
 
+  static updatePatient(id, body) {
+    return new Promise((resolve, reject) => {
+      try {
+        axios.post(`${url}/${id}`, body)
+          .then(() => {
+            resolve();
+          });
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
   static fetchPatientProfile(id) {
     return new Promise((resolve, reject) => {
       try {

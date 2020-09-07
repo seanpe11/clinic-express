@@ -1,7 +1,7 @@
 <template>
   <div class="patient">
     <div class="row">
-      <Sidebar :name='name' :links='links'/>
+      <Sidebar :name='patient.name' :links='links'/>
       <div id="content" class='col-10'>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -13,21 +13,21 @@
           <div class="container mt-5">
             <div class="row">
               <div class="col-lg-6">
-                <h3>Name: {{ name }} </h3>
+                <h3>Name: {{ patient.name }} </h3>
               </div>
               <div class="col-lg-3">
-                <h3>Sex: {{ sex }}</h3>
+                <h3>Sex: {{ patient.sex }}</h3>
               </div>
               <div class="col-lg-3">
-                <h3>Age: {{ age }}</h3>
+                <h3>Age: {{ patient.age }}</h3>
               </div>
             </div>
             <div class="row mt-4 mb-5">
               <div class="col-lg-6">
-                <h3>Address: {{ address }} </h3>
+                <h3>Address: {{ patient.address }} </h3>
               </div>
               <div class="col-lg-6">
-                <h3>Occupation: {{ occupation }} </h3>
+                <h3>Occupation: {{ patient.occupation }} </h3>
               </div>
             </div>
           </div>
@@ -39,21 +39,36 @@
           <div class="container mt-5">
             <div class="row">
               <div class="col-lg-6">
-                <h3>Name: {{ name }} </h3>
+                <div class="form-group">
+                  <label for="name">Name: </label>
+                  <input type="text" v-model="patient.name"/>
+                </div>
               </div>
               <div class="col-lg-3">
-                <h3>Sex: {{ sex }}</h3>
+                <div class="form-group">
+                  <label for="name">Sex: </label>
+                  <input type="text" v-model="patient.sex"/>
+                </div>
               </div>
               <div class="col-lg-3">
-                <h3>Age: {{ age }}</h3>
+                <div class="form-group">
+                  <label for="name">Age: </label>
+                  <input type="text" v-model="patient.age"/>
+                </div>
               </div>
             </div>
             <div class="row mt-4 mb-5">
               <div class="col-lg-6">
-                <h3>Address: {{ address }} </h3>
+                <div class="form-group">
+                  <label for="name">Address: </label>
+                  <input type="text" v-model="patient.address"/>
+                </div>
               </div>
               <div class="col-lg-6">
-                <h3>Occupation: {{ occupation }} </h3>
+                <div class="form-group">
+                  <label for="name">Occupation: </label>
+                  <input type="text" v-model="patient.occupation"/>
+                </div>
               </div>
             </div>
           </div>
@@ -148,6 +163,7 @@ export default {
     sex: '',
     address: '',
     occupation: '',
+    patient: {},
     links: [
       {
         name: 'Summary Statistics',
@@ -192,17 +208,31 @@ export default {
       $('#editPatientInfo').hide();
       this.loadData();
     },
-    saveInfo() {
+    async saveInfo() {
       // to do
+      try {
+        $('#patientInfo').show();
+        $('#editPatientInfo').hide();
+        const toSend = {
+          name: this.patient.name,
+          address: this.patient.address,
+          sex: this.patient.sex,
+          age: this.patient.age,
+          occupation: this.patient.occupation,
+        };
+        PatientService.updatePatient(this.id, toSend)
+          .then(() => {
+            this.loadData();
+          });
+      } catch (err) {
+        console.log('error');
+        this.loadData();
+      }
     },
     async loadData() {
       try {
         const data = await PatientService.fetchPatientProfile(this.id);
-        this.name = data.name;
-        this.age = data.age;
-        this.sex = data.sex;
-        this.address = (data.address) ? data.address : 'N/A';
-        this.occupation = (data.occupation) ? data.occupation : 'N/A';
+        this.patient = data;
         this.visits = data.visits.reverse();
         $('#objectCard').hide();
         $('#assessmentCard').hide();
