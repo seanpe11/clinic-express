@@ -54,9 +54,15 @@ router.post('/:id', async (req, res) => {
     }
 });
 
-router.post('/testingthejuicer', (req, res) => {
-    console.log(req.body.text)
-    res.status(200).send('it worked')
+router.delete('/:id', async(req, res) => {
+    try {
+        await Visit.deleteOne( { _id: req.params.id } );
+        res.status(200).send('ok');
+    } catch (err) {
+        console.log(err);
+        return res.status(500);
+    }
 })
+
 
 module.exports = router;

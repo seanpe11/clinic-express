@@ -158,7 +158,6 @@ export default {
       $(`#edit${section}`).show();
       $(`#editing${section}`).hide();
       this.loadData();
-      console.log(this.soap);
     },
     // Send to DB, also front-end change
     async save(section) {
