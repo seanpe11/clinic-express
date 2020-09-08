@@ -56,7 +56,7 @@ router.post('/:id', async (req, res) => {
 
 router.delete('/:id', async(req, res) => {
     try {
-        await Visit.deleteOne( { _id: req.params.id } );
+        await Visit.findByIdAndDelete(req.params.id);
         res.status(200).send('ok');
     } catch (err) {
         console.log(err);

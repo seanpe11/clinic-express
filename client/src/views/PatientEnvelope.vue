@@ -74,6 +74,7 @@
           </div>
           <button class='mb-25 default'><div class='add-btn' type="button" @click="cancel">Cancel</div></button>
           <button class='mb-25 default'><div class='add-btn' type="button" @click="saveInfo">Save</div></button>
+          <button class='mb-25 default'><div class='add-btn' type="button" @click="deletePatient">Delete Patient</div></button>
         </div>
         <button class='mb-25 default'><div class='add-btn' type="button" @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
         <!-- FOR LOOP FOR VISITS -->
@@ -223,6 +224,17 @@ export default {
         PatientService.updatePatient(this.id, toSend)
           .then(() => {
             this.loadData();
+          });
+      } catch (err) {
+        console.log('error');
+        this.loadData();
+      }
+    },
+    async deletePatient() {
+      try {
+        PatientService.deletePatient(this.id)
+          .then(() => {
+            this.$router.push('/');
           });
       } catch (err) {
         console.log('error');

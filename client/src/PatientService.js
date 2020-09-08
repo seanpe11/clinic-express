@@ -68,6 +68,19 @@ class PatientService {
       }
     });
   }
+
+  static deletePatient(id) {
+    return new Promise((resolve, reject) => {
+      try {
+        axios.delete(`${url}/${id}`)
+          .then(() => {
+            resolve();
+          });
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
 }
 
 export default PatientService;

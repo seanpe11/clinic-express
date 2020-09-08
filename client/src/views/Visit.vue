@@ -10,7 +10,7 @@
           </li>
           <li class="breadcrumb-item active" aria-current="page">Visit Record</li>
         </ol>
-        <div class="rectangle mb-25">
+        <div class="rectangle mb-25 flex-row">
           <h3>{{ visit_date }}</h3>
           <div class="btn btn-danger" @click="deleteVisit">Delete Visit</div>
         </div>
@@ -169,8 +169,15 @@ export default {
           this.loadData();
         });
     },
-    deleteVisit() {
-      VisitService.deleteVisit(this.visit_id);
+    async deleteVisit() {
+      try {
+        VisitService.deleteVisit(this.visit_id)
+          .then(() => {
+            this.$router.push(`/patients/envelope/${this.id}`);
+          });
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 };

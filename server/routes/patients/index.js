@@ -116,4 +116,31 @@ router.get('/:id', async function (req, res) {
     }
 });
 
+router.delete('/:id', async function (req, res) {
+    try {
+        async.parallel({
+            patient: function (callback) {
+                Patient.findByIdAndDelete(req.params.id)
+                    .then((result) => { callback(null, result) })
+                    .catch(err => callback(err));
+            },
+            visits: function (callback) {
+                Visits.deleteMany({ patient: req.params.id })
+                    .then((result) => { callback(null, result)})
+                    .catch(err => callback(err));
+            }
+        }, async function (err, result) {
+            if(err) {
+                console.log(err);
+                return res.status(500);
+            }
+
+            res.json(true);
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json('Internal Server Error');
+    }
+});
+
 module.exports = router;
