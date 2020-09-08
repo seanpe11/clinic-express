@@ -34,7 +34,7 @@ class PatientService {
   static updatePatient(id, body) {
     return new Promise((resolve, reject) => {
       try {
-        axios.post(`${url}/${id}`, body)
+        axios.put(`${url}/${id}`, body)
           .then(() => {
             resolve();
           });
