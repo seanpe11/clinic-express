@@ -1,23 +1,59 @@
 // TODO: HTML Requests for Files (GET, POST, DELETE)
 
-const express = require('express');
+'use strict';
+
+const router = require('express').Router();
+const async = require('async');
+const mongoose = require("mongoose");
+const moment = require('moment');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
-const url = ''; // need to change this
 
-const router = express.Router();
+const Files = require('../../models').files;
+const url;
+
+const conn = mongoose.createConnection(Files, {
+   useNewUrlParser: true,
+   useUnifiedTopology: true 
+});
+
+let gfs;
+conn.once('open', () => {
+    gfs = new mongoose.mongo.GridFSBucket(conn.db, {
+        bucketName: 'files'
+    });
+})
+
 
 // Create a storage object with a configuration 
-const storage = new GridFsStorage({ url });
+const storage = new GridFsStorage({ 
+    url: url,
+    file: (req, file) => {
+        return new Promise((resolve, reject) => {
+            if (err) return reject(err);
+
+            if(file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' 
+                || file.mimetype === 'application/pdf') {
+
+                const fileInfo = {
+                    filename: req.file.filename + path.extname(file.originalname),
+                    bucketName: 'files'
+                }
+
+                resolve(fileInfo);
+
+            } else return reject(err);
+        });
+    }
+
+});
 
 
 // Set multer storage engine to the newly created object
 const upload = multer({ storage });
 
-// Getting the list of filenames of the supporting files
-router.get('/', (req, res) => {
-    res.send("Hello World");
-});
+// Uploading Files
+router.post('/:filename',   )
 
 
 // Getting the Picture from the data base
