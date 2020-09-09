@@ -10,9 +10,9 @@ const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 
 const Files = require('../../models').files;
-const url;
+const uri= 'mongodb+srv://admin:admin@clinic-express.np8jo.mongodb.net/test';
 
-const conn = mongoose.createConnection(Files, {
+const conn = mongoose.createConnection(uri, {
    useNewUrlParser: true,
    useUnifiedTopology: true 
 });
@@ -27,7 +27,7 @@ conn.once('open', () => {
 
 // Create a storage object with a configuration 
 const storage = new GridFsStorage({ 
-    url: url,
+    url: uri,
     file: (req, file) => {
         return new Promise((resolve, reject) => {
             if (err) return reject(err);
@@ -53,14 +53,32 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 // Uploading Files
-router.post('/:filename',   )
+router.post('/:filename',  upload.single("file"), async (req, res) => {
+    try {
+        let file = await Files.create({ filename: req.files.filename });
+        res.json(file);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json('Internal Server Error');
+    }
+});
 
 
-// Getting the Picture from the data base
-router.get('/:filename', (req, res) => {
-    var filename = req.params.filename;
+// Getting All File
+router.get('/', async (req, res) => {
+    try {
+        Files.find().exec()
+         .then(function (result){
+            res.json(result);
+         })
+         .catch(() => {
+            res.redirect('/patients/visits');
+         });
 
-    // Search in the data base
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json('Loading Files Failed');
+    }
 });
 
 

@@ -23,7 +23,7 @@ const routes = [
     component: () => import('../views/Visit.vue'),
   },
   {
-    path: '/patients/visits/:id/:visit_id/files',
+    path: '/patient/visit/files',
     component: () => import('../views/SupportFiles.vue'),
   },
 ];
