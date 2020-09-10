@@ -31,6 +31,7 @@
 <script>
 /* eslint-env jquery */
 import Sidebar from '@/components/Sidebar.vue';
+import $ from 'jquery';
 
 export default {
   name: 'SupportFile',
@@ -45,17 +46,7 @@ export default {
       },
     ],
     // replace this with the mongodb query result
-    files: [
-      {
-        filename: 'File 1.jpg',
-      },
-      {
-        filename: 'File 2.jpg',
-      },
-      {
-        filename: 'File 3.jpg',
-      },
-    ],
+    files: [],
   }),
 };
 
