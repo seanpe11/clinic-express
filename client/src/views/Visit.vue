@@ -10,11 +10,16 @@
           </li>
           <li class="breadcrumb-item active" aria-current="page">Visit Record</li>
         </ol>
-        <div class="rectangle mb-25 flex-row">
-          <h3>{{ visit_date }}</h3>
-          <div class="btn btn-danger" @click="deleteVisit">Delete Visit</div>
+        <div class="rectangle mb-25 d-flex">
+          <h3 class="col-6 m-0">{{ visit_date }}</h3>
+          <div class="col-6">
+            <div class="btn btn-danger float-right" @click="deleteVisit">Delete Visit</div>
+          </div>
         </div>
-        <div class="rectangle mg-25">
+        <div class="rectangle mb-25">
+          <h3 class='mb-25'>Visit Basic Information</h3>
+        </div>
+        <div class="rectangle mb-25">
           <h2 class='mb-25'>SOAP File</h2>
           <ul class="nav nav-tabs mb-25" id="myTab" role="tablist">
             <li class="nav-item">
@@ -93,6 +98,20 @@
             </div>
           </div>
         </div>
+        <div class="rectangle mb-25">
+          <h3 class='mb-25'>Pain Visualization Tool</h3>
+          <div class="d-flex justify-content-center">
+            <canvas id="painVisualTool" style="border:1px solid #000000;"></canvas>
+          </div>
+          <div class="card mt-5">
+            <div class="card-body">
+              <h4 class="card-title">Tool Kit</h4>
+              <button id="clearCanvasBtn" class="btn btn-danger">Clear Canvas</button>
+              <input type="color" id="colorPicker" name="colorPicker" value="#e32400">
+              <label for="colorPicker">Change Brush Color</label>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -102,6 +121,8 @@
 /* eslint-env jquery */
 import Sidebar from '@/components/Sidebar.vue';
 import moment from 'moment';
+import { fabric } from 'fabric';
+import image from '@/assets/human-body.jpg';
 import VisitService from '../VisitService';
 
 export default {
@@ -136,6 +157,7 @@ export default {
     $('#editingObj').hide();
     $('#editingAss').hide();
     $('#editingPla').hide();
+    this.startFabric();
   },
   methods: {
     // Reloads data from API
@@ -146,6 +168,39 @@ export default {
         this.visit_date = moment(visit.createdAt).format('LLL');
         this.soap = visit;
       });
+    },
+    startFabric() {
+      const canvas = new fabric.Canvas('painVisualTool', {
+        width: 700,
+        height: 700,
+        selection: false,
+        border: 10,
+      });
+      // TODO: When on load, call loadFromJSON() function to load prev state.
+      fabric.Image.fromURL(image, (img) => {
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+          scaleX: canvas.width / img.width,
+          scaleY: canvas.height / img.height,
+        });
+      });
+      canvas.isDrawingMode = true;
+      canvas.freeDrawingBrush.color = '#000000';
+      canvas.freeDrawingBrush.width = 10;
+      canvas.requestRenderAll();
+      $('#clearCanvasBtn').on('click', () => {
+        canvas.getObjects().forEach((o) => {
+          if (o !== canvas.backgroundImage) {
+            canvas.remove(o);
+          }
+        });
+        canvas.requestRenderAll();
+      });
+      $('#colorPicker').on('change', (e) => {
+        canvas.freeDrawingBrush.color = e.target.value;
+        console.log(e.target.value);
+        canvas.requestRenderAll();
+      });
+      // TODO: When change is detected to the Canvas, push state to DB as JSON.
     },
     // Front-end crud
     edit(section) {

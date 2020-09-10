@@ -31,7 +31,7 @@
               </div>
             </div>
           </div>
-          <button class='mb-25 default'><div class='add-btn' v-on:click='edit' type="button">Edit Patient Info</div></button>
+          <button class='mb-25'><div class='add-btn' v-on:click='edit'>Edit Patient Info</div></button>
         </div>
         <!-- Edit patient form -->
         <div class="rectangle mb-25" id="editPatientInfo">
@@ -72,13 +72,14 @@
               </div>
             </div>
           </div>
-          <button class='mb-25 default'><div class='add-btn' type="button" @click="cancel">Cancel</div></button>
-          <button class='mb-25 default'><div class='add-btn' type="button" @click="saveInfo">Save</div></button>
-          <button class='mb-25 default'><div class='add-btn' type="button" @click="deletePatient">Delete Patient</div></button>
+          <button class='mb-25 default'><div class='cancel-btn' @click="cancel">Cancel</div></button>
+          <button class='mb-25 default'><div class='save-btn' @click="saveInfo">Save</div></button>
+          <button class='mb-25 default'><div class='delete-btn' @click="deletePatient">Delete Patient</div></button>
         </div>
-        <button class='mb-25 default'><div class='add-btn' type="button" @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
+        <input type="text" class="search" v-model="search" placeholder="Search visit dates" v-on:keyup.enter="searchQuery" />
+        <button class='mb-25 default'><div class='add-btn' @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
         <!-- FOR LOOP FOR VISITS -->
-        <div v-for="visit in visits" :key='visit._id'>
+        <div v-for="visit in searchQuery()" :key='visit._id'>
           <!-- TODO: change :key to the visitID -->
           <router-link :to="{ path: visit.link }">
             <div class="rectangle mb-25">{{visit.date}}</div>
@@ -178,6 +179,7 @@ export default {
     assessment: '',
     plan: '',
     errorMessage: '',
+    search: '',
   }),
   async created() {
     this.id = this.$route.params.id;
@@ -187,6 +189,16 @@ export default {
     $('#editPatientInfo').hide();
   },
   methods: {
+    searchQuery() {
+      try {
+        if (this.search) {
+          return this.visits.filter((item) => this.search.toLowerCase().split(' ').every((v) => item.date.toLowerCase().includes(v)));
+        }
+      } catch (err) {
+        alert('error');
+      }
+      return this.visits;
+    },
     async saveVisit() {
       this.errorMessage = '';
       const newVisit = {

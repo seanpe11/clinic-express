@@ -197,11 +197,6 @@ export default {
 </script>
 
 <style scoped>
-button {
-  border: none;
-  background: transparent;
-}
-
 .router-link {
   text-decoration: none;
   color: black;
@@ -225,15 +220,6 @@ button {
   font-size: 12px;
   text-align: right;
   color: #737373;
-}
-
-.search {
-  background: #EDEDED;
-  border-radius: 10px;
-  padding: 0.1in 0.5in;
-  margin-bottom: 0.25in;
-  border-width: 0;
-  width: 100%;
 }
 
 #content {
