@@ -21,6 +21,24 @@ class VisitService {
       }
     });
   }
+
+  // TODO: Add update visit @Sean
+  static updateVisit(id, data) {
+    return new Promise((resolve, reject) => {
+      try {
+        axios.post(`${url}/${id}`, data)
+          .then(() => {
+            resolve();
+          });
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  static deleteVisit(id) {
+    return axios.delete(`${url}/${id}`);
+  }
 }
 
 export default VisitService;

@@ -43,7 +43,7 @@
                       <input class="form-control" type="text" name="name" v-model="name" required />
                     </div>
                     <br />
-                    <div class="form-group">
+                    <div class="">
                       <div class="row">
                         <div class="col-md-3 mr-5">
                           <label for="patientAge">Age:</label>
@@ -58,13 +58,11 @@
                         </div>
                         <div class="col-md-5">
                           <label>Sex:</label>
-                          <div class="form-group pt-2">
-                            <label class="radio-inline pr-5">
-                              <input type="radio" name="sex" v-model="sex" value="Male" />Male
-                            </label>
-                            <label class="radio-inline">
-                              <input type="radio" name="sex" v-model="sex" value="Female" />Female
-                            </label>
+                          <div class="form-group">
+                            <select id="inputState" class="form-control" v-model="sex">
+                              <option selected>Male</option>
+                              <option>Female</option>
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -111,7 +109,7 @@
         </div>
 
         <!-- FOR LOOP FOR PATIENT -->
-        <div v-for="patient in patients" :key="patient.name">
+        <div v-for="patient in searchQuery()" :key="patient.name">
           <!-- TODO: change :key to the patientID -->
           <router-link :to="{path: patient.link}" class="router-link">
             <div class="rectangle patient">
@@ -124,6 +122,7 @@
             </div>
           </router-link>
         </div>
+
         <!-- END LOOP -->
         <!-- Modal -->
       </div>
@@ -183,23 +182,21 @@ export default {
         }
       });
     },
-    async searchQuery() {
+    searchQuery() {
       try {
-        this.patients = await PatientService.getPatients(this.search);
+        if (this.search) {
+          return this.patients.filter((item) => this.search.toLowerCase().split(' ').every((v) => item.name.toLowerCase().includes(v)));
+        }
       } catch (err) {
         alert('error');
       }
+      return this.patients;
     },
   },
 };
 </script>
 
 <style scoped>
-button {
-  border: none;
-  background: transparent;
-}
-
 .router-link {
   text-decoration: none;
   color: black;
@@ -223,16 +220,6 @@ button {
   font-size: 12px;
   text-align: right;
   color: #737373;
-}
-
-.search {
-  background: #fdfbfb;
-  border-radius: 10px;
-  padding: 0.1in 0.5in;
-  margin-bottom: 0.25in;
-  border-width: thin;
-  border-color: gray;
-  width: 100%;
 }
 
 #content {

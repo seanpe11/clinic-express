@@ -3,5 +3,6 @@
 module.exports = Object.freeze({
     patients: require('./patients'),
     visits: require('./visits'),
-    users: require('./users')
+    users: require('./users'),
+    // files: require('./files'),
 })

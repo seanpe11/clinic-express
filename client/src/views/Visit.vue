@@ -10,10 +10,16 @@
           </li>
           <li class="breadcrumb-item active" aria-current="page">Visit Record</li>
         </ol>
-        <div class="rectangle mb-25">
-          <h3>{{ visit_date }}</h3>
+        <div class="rectangle mb-25 d-flex">
+          <h3 class="col-6 m-0">{{ visit_date }}</h3>
+          <div class="col-6">
+            <div class="btn btn-danger float-right" @click="deleteVisit">Delete Visit</div>
+          </div>
         </div>
-        <div class="rectangle mg-25">
+        <div class="rectangle mb-25">
+          <h3 class='mb-25'>Visit Basic Information</h3>
+        </div>
+        <div class="rectangle mb-25">
           <h2 class='mb-25'>SOAP File</h2>
           <ul class="nav nav-tabs mb-25" id="myTab" role="tablist">
             <li class="nav-item">
@@ -41,18 +47,68 @@
               </a>
             </li>
           </ul>
-          <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="subjective" role="tabpanel" aria-labelledby="home-tab">
-              {{soap.subjective}}
+          <div class="tab-content" style="min-height: 70%" id="myTabContent">
+            <div class="tab-pane fade show active" id="subjective" role="tabpanel" aria-labelledby="subjective-tab">
+              <div class="form-group">
+                <textarea class="form-control" id="formSub" rows="10" v-model="soap.subject" readonly></textarea>
+              </div>
+              <div class="my-3" id="editSub">
+                <div class="btn btn-primary" id="editS" v-on:click="edit('Sub')">Edit Subjective</div>
+              </div>
+              <div class="my-3" id="editingSub">
+                <div class="btn btn-warning" v-on:click="cancel('Sub')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Sub')">Save</div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="profile-tab">
-              {{soap.objective}}
+            <div class="tab-pane fade" id="objective" role="tabpanel" aria-labelledby="objective-tab">
+              <div class="form-group">
+                <textarea class="form-control" id="formObj" rows="10" v-model="soap.object" readonly></textarea>
+              </div>
+              <div class="my-3" id="editObj">
+                <div class="btn btn-primary" v-on:click="edit('Obj')">Edit Objective</div>
+              </div>
+              <div class="my-3" id="editingObj">
+                <div class="btn btn-warning" v-on:click="cancel('Obj')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Obj')">Save</div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="contact-tab">
-              {{soap.assessment}}
+            <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="assessment-tab">
+              <div class="form-group">
+                <textarea class="form-control" id="formAss" rows="10" v-model="soap.assessment" readonly></textarea>
+              </div>
+              <div class="my-3" id="editAss">
+                <div class="btn btn-primary" v-on:click="edit('Ass')">Edit Assessment</div>
+              </div>
+              <div class="my-3" id="editingAss">
+                <div class="btn btn-warning" v-on:click="cancel('Ass')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Ass')">Save</div>
+              </div>
             </div>
-            <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="contact-tab">
-              {{soap.plan}}
+            <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="plan-tab">
+              <div class="form-group">
+                <textarea class="form-control" id="formPla" rows="10" v-model="soap.plan" readonly></textarea>
+              </div>
+              <div class="my-3" id="editPla">
+                <div class="btn btn-primary" v-on:click="edit('Pla')">Edit Plan</div>
+              </div>
+              <div class="my-3" id="editingPla">
+                <div class="btn btn-warning" v-on:click="cancel('Pla')">Cancel</div>
+                <div class="btn btn-success mx-2" v-on:click="save('Pla')">Save</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rectangle mb-25">
+          <h3 class='mb-25'>Pain Visualization Tool</h3>
+          <div class="d-flex justify-content-center">
+            <canvas id="painVisualTool" style="border:1px solid #000000;"></canvas>
+          </div>
+          <div class="card mt-5">
+            <div class="card-body">
+              <h4 class="card-title">Tool Kit</h4>
+              <button id="clearCanvasBtn" class="btn btn-danger">Clear Canvas</button>
+              <input type="color" id="colorPicker" name="colorPicker" value="#e32400">
+              <label for="colorPicker">Change Brush Color</label>
             </div>
           </div>
         </div>
@@ -65,6 +121,8 @@
 /* eslint-env jquery */
 import Sidebar from '@/components/Sidebar.vue';
 import moment from 'moment';
+import { fabric } from 'fabric';
+import image from '@/assets/human-body.jpg';
 import VisitService from '../VisitService';
 
 export default {
@@ -83,29 +141,109 @@ export default {
       },
     ],
     soap: {
-      subjective: 'Subjective',
-      objective: 'Objective',
+      subject: 'Subjective',
+      object: 'Objective',
       assessment: 'Assessment',
       plan: 'Plan',
     },
     visit_date: '-',
+    visit: {},
   }),
   async created() {
-    this.id = this.$route.params.id;
-    this.visit_id = this.$route.params.visit_id;
-    VisitService.getVisitDetails(this.visit_id).then((visit) => {
-      this.visit_date = moment(visit.createdAt).format('LLL');
-      this.soap.subjective = visit.subject;
-      this.soap.objective = visit.object;
-      this.soap.assessment = visit.assessment;
-      this.soap.plan = visit.plan;
-    });
+    this.loadData();
+  },
+  mounted() {
+    $('#editingSub').hide();
+    $('#editingObj').hide();
+    $('#editingAss').hide();
+    $('#editingPla').hide();
+    this.startFabric();
+  },
+  methods: {
+    // Reloads data from API
+    async loadData() {
+      this.id = this.$route.params.id;
+      this.visit_id = this.$route.params.visit_id;
+      VisitService.getVisitDetails(this.visit_id).then((visit) => {
+        this.visit_date = moment(visit.createdAt).format('LLL');
+        this.soap = visit;
+      });
+    },
+    startFabric() {
+      const canvas = new fabric.Canvas('painVisualTool', {
+        width: 700,
+        height: 700,
+        selection: false,
+        border: 10,
+      });
+      // TODO: When on load, call loadFromJSON() function to load prev state.
+      fabric.Image.fromURL(image, (img) => {
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+          scaleX: canvas.width / img.width,
+          scaleY: canvas.height / img.height,
+        });
+      });
+      canvas.isDrawingMode = true;
+      canvas.freeDrawingBrush.color = '#000000';
+      canvas.freeDrawingBrush.width = 10;
+      canvas.requestRenderAll();
+      $('#clearCanvasBtn').on('click', () => {
+        canvas.getObjects().forEach((o) => {
+          if (o !== canvas.backgroundImage) {
+            canvas.remove(o);
+          }
+        });
+        canvas.requestRenderAll();
+      });
+      $('#colorPicker').on('change', (e) => {
+        canvas.freeDrawingBrush.color = e.target.value;
+        console.log(e.target.value);
+        canvas.requestRenderAll();
+      });
+      // TODO: When change is detected to the Canvas, push state to DB as JSON.
+    },
+    // Front-end crud
+    edit(section) {
+      $(`#form${section}`).prop('readonly', false);
+      $(`#edit${section}`).hide();
+      $(`#editing${section}`).show();
+    },
+    cancel(section) {
+      $(`#form${section}`).prop('readonly', true);
+      $(`#edit${section}`).show();
+      $(`#editing${section}`).hide();
+      this.loadData();
+    },
+    // Send to DB, also front-end change
+    async save(section) {
+      $(`#form${section}`).prop('readonly', true);
+      $(`#edit${section}`).show();
+      $(`#editing${section}`).hide();
+      VisitService.updateVisit(this.visit_id, this.soap)
+        .then(() => {
+          this.loadData();
+        });
+    },
+    async deleteVisit() {
+      try {
+        VisitService.deleteVisit(this.visit_id)
+          .then(() => {
+            this.$router.push(`/patients/envelope/${this.id}`);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
 };
 
 </script>
 
 <style scoped>
+textarea {
+  /* resize: none; */
+  resize: vertical;
+}
 
 #content {
   padding: .25in .5in;

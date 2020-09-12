@@ -1,3 +1,8 @@
+button {
+    border: none;
+    background: transparent;
+}
+
 .rectangle {
     background: #FFFFFF;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -5,13 +10,25 @@
     padding: .2in .5in;
 }
 
-.add-btn {
+.add-btn, .cancel-btn, .save-btn, .delete-btn{
     font-size: 24px;
     color: #737373;
 }
 
 .add-btn:hover {
     color: #35B4FE;
+}
+
+.cancel-btn:hover {
+    color: #F5EA00;
+}
+
+.save-btn:hover {
+    color: #00F541;
+}
+
+.delete-btn:hover {
+    color: #F50000;
 }
 
 a {
@@ -33,4 +50,13 @@ input:focus, textarea:focus, select:focus, button:focus{
 
 footer {
     width: 200px;
+}
+
+.search {
+    background: #EDEDED;
+    border-radius: 10px;
+    padding: 0.1in 0.5in;
+    margin-bottom: 0.25in;
+    border-width: 0;
+    width: 100%;
 }

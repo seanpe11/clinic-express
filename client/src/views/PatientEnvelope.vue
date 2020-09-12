@@ -1,39 +1,85 @@
 <template>
   <div class="patient">
     <div class="row">
-      <Sidebar :name='name' :links='links'/>
+      <Sidebar :name='patient.name' :links='links'/>
       <div id="content" class='col-10'>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item active" aria-current="page">Patient Envelope</li>
         </ol>
-        <div class="rectangle mb-25">
+        <!-- Basic Information -->
+        <div class="rectangle mb-25" id="patientInfo">
           Basic Information
           <div class="container mt-5">
             <div class="row">
               <div class="col-lg-6">
-                <h3>Name: {{ name }} </h3>
+                <h3>Name: {{ patient.name }} </h3>
               </div>
               <div class="col-lg-3">
-                <h3>Sex: {{ sex }}</h3>
+                <h3>Sex: {{ patient.sex }}</h3>
               </div>
               <div class="col-lg-3">
-                <h3>Age: {{ age }}</h3>
+                <h3>Age: {{ patient.age }}</h3>
               </div>
             </div>
             <div class="row mt-4 mb-5">
               <div class="col-lg-6">
-                <h3>Address: {{ address }} </h3>
+                <h3>Address: {{ patient.address }} </h3>
               </div>
               <div class="col-lg-6">
-                <h3>Occupation: {{ occupation }} </h3>
+                <h3>Occupation: {{ patient.occupation }} </h3>
               </div>
             </div>
           </div>
+          <button class='mb-25'><div class='add-btn' v-on:click='edit'>Edit Patient Info</div></button>
         </div>
-        <button class='mb-25 default'><div class='add-btn' type="button" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
+        <!-- Edit patient form -->
+        <div class="rectangle mb-25" id="editPatientInfo">
+          Editing Information
+          <div class="container mt-5">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="name">Name: </label>
+                  <input type="text" v-model="patient.name"/>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="name">Sex: </label>
+                  <input type="text" v-model="patient.sex"/>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="name">Age: </label>
+                  <input type="text" v-model="patient.age"/>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-4 mb-5">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="name">Address: </label>
+                  <input type="text" v-model="patient.address"/>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="name">Occupation: </label>
+                  <input type="text" v-model="patient.occupation"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class='mb-25 default'><div class='cancel-btn' @click="cancel">Cancel</div></button>
+          <button class='mb-25 default'><div class='save-btn' @click="saveInfo">Save</div></button>
+          <button class='mb-25 default'><div class='delete-btn' @click="deletePatient">Delete Patient</div></button>
+        </div>
+        <input type="text" class="search" v-model="search" placeholder="Search visit dates" v-on:keyup.enter="searchQuery" />
+        <button class='mb-25 default'><div class='add-btn' @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
         <!-- FOR LOOP FOR VISITS -->
-        <div v-for="visit in visits" :key='visit._id'>
+        <div v-for="visit in searchQuery()" :key='visit._id'>
           <!-- TODO: change :key to the visitID -->
           <router-link :to="{ path: visit.link }">
             <div class="rectangle mb-25">{{visit.date}}</div>
@@ -41,7 +87,7 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="addVisitModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="addVisitModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -95,7 +141,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -119,6 +165,7 @@ export default {
     sex: '',
     address: '',
     occupation: '',
+    patient: {},
     links: [
       {
         name: 'Summary Statistics',
@@ -132,37 +179,91 @@ export default {
     assessment: '',
     plan: '',
     errorMessage: '',
+    search: '',
   }),
   async created() {
     this.id = this.$route.params.id;
-    try {
-      const data = await PatientService.fetchPatientProfile(this.id);
-      this.name = data.name;
-      this.age = data.age;
-      this.sex = data.sex;
-      this.address = (data.address) ? data.address : 'N/A';
-      this.occupation = (data.occupation) ? data.occupation : 'N/A';
-      this.visits = data.visits;
-      $('#objectCard').hide();
-      $('#assessmentCard').hide();
-      $('#planCard').hide();
-    } catch (err) {
-      alert('error');
-    }
+  },
+  mounted() {
+    this.loadData();
+    $('#editPatientInfo').hide();
   },
   methods: {
+    searchQuery() {
+      try {
+        if (this.search) {
+          return this.visits.filter((item) => this.search.toLowerCase().split(' ').every((v) => item.date.toLowerCase().includes(v)));
+        }
+      } catch (err) {
+        alert('error');
+      }
+      return this.visits;
+    },
     async saveVisit() {
       this.errorMessage = '';
       const newVisit = {
-        subject: this.subject,
-        object: this.object,
-        assessment: this.assessment,
-        plan: this.plan,
+        subject: '',
+        object: '',
+        assessment: '',
+        plan: '',
         patient: this.id,
       };
       VisitService.createVisit(newVisit).then(() => {
-        document.location.reload();
+        this.loadData();
       });
+    },
+    edit() {
+      $('#patientInfo').hide();
+      $('#editPatientInfo').show();
+    },
+    cancel() {
+      $('#patientInfo').show();
+      $('#editPatientInfo').hide();
+      this.loadData();
+    },
+    async saveInfo() {
+      // to do
+      try {
+        $('#patientInfo').show();
+        $('#editPatientInfo').hide();
+        const toSend = {
+          name: this.patient.name,
+          address: this.patient.address,
+          sex: this.patient.sex,
+          age: this.patient.age,
+          occupation: this.patient.occupation,
+        };
+        PatientService.updatePatient(this.id, toSend)
+          .then(() => {
+            this.loadData();
+          });
+      } catch (err) {
+        console.log('error');
+        this.loadData();
+      }
+    },
+    async deletePatient() {
+      try {
+        PatientService.deletePatient(this.id)
+          .then(() => {
+            this.$router.push('/');
+          });
+      } catch (err) {
+        console.log('error');
+        this.loadData();
+      }
+    },
+    async loadData() {
+      try {
+        const data = await PatientService.fetchPatientProfile(this.id);
+        this.patient = data;
+        this.visits = data.visits.reverse();
+        $('#objectCard').hide();
+        $('#assessmentCard').hide();
+        $('#planCard').hide();
+      } catch (err) {
+        console.log('error');
+      }
     },
   },
   watch: {

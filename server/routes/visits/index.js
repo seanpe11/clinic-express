@@ -37,6 +37,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+<<<<<<< HEAD
 function validateRequestBody (body) {
     const schema = Joi.object().keys({
         patient: Joi.string().required(),
@@ -51,5 +52,37 @@ function validateRequestBody (body) {
 
     return schema.validate(body);
 }
+=======
+router.post('/:id', async (req, res) => {
+    // Code here
+    try {
+        let visit = await Visit.findOne( { _id: req.params.id });
+        if (!visit) return res.status(400).json('Visit not found');
+
+        visit.subject = req.body.subject;
+        visit.object = req.body.object;
+        visit.assessment = req.body.assessment;
+        visit.plan = req.body.plan;
+
+        await visit.save();
+
+        res.status(200).send('ok');
+    } catch (err) {
+        console.log(err)
+        return res.status(500)
+    }
+});
+
+router.delete('/:id', async(req, res) => {
+    try {
+        await Visit.findByIdAndDelete(req.params.id);
+        res.status(200).send('ok');
+    } catch (err) {
+        console.log(err);
+        return res.status(500);
+    }
+})
+
+>>>>>>> 046ac1ad6872ad08538b95efac70a00a872c7086
 
 module.exports = router;

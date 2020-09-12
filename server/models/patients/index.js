@@ -20,7 +20,7 @@ const schema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now()
-    }
+    },
 })
 
 const model = mongoose.model('patients', schema);
