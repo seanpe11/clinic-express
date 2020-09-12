@@ -7,6 +7,15 @@ const schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         refs: 'patients'
     },
+    weight: {
+        type: String
+    },
+    heart_rate: {
+        type: String
+    },
+    blood_pressure: {
+        type: String
+    },
     subject: {
         type: String
     },

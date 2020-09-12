@@ -8,6 +8,11 @@ const schema = new mongoose.Schema({
     sex: String,
     address: String,
     occupation: String,
+    contact_number: String,
+    date_of_birth: Date,
+    marital_status: String,
+    height: String,
+    previous_names: String,
     createdAt: {
         type: Date,
         default: Date.now()
