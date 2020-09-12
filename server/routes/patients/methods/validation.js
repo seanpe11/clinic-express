@@ -7,7 +7,9 @@ function createValidateBody (body) {
         name: Joi.string().min(2).max(30).empty().required(),
         age: Joi.number().required(),
         sex: Joi.string().required().empty(),
-        address: Joi.string().min(8).max(50).empty().required(),
+        street: Joi.string().min(8).max(50).empty().required(),
+        city: Joi.string().min(8).max(50).empty().required(),
+        province: Joi.string().min(8).max(50).empty().required(),
         occupation: Joi.string()
     });
     return schema.validate(body);
@@ -18,7 +20,9 @@ function updateValidateBody (body) {
         name: Joi.string().min(2).max(30).empty(),
         age: Joi.number(),
         sex: Joi.string().empty(),
-        address: Joi.string().min(8).max(50).empty(),
+        street: Joi.string().min(8).max(50).empty(),
+        city: Joi.string().min(8).max(50).empty(),
+        province: Joi.string().min(8).max(50).empty(),
         occupation: Joi.string()
     });
     return schema.validate(body);
