@@ -37,7 +37,6 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
 function validateRequestBody (body) {
     const schema = Joi.object().keys({
         patient: Joi.string().required(),
@@ -52,7 +51,6 @@ function validateRequestBody (body) {
 
     return schema.validate(body);
 }
-=======
 router.post('/:id', async (req, res) => {
     // Code here
     try {
@@ -83,6 +81,5 @@ router.delete('/:id', async(req, res) => {
     }
 })
 
->>>>>>> 046ac1ad6872ad08538b95efac70a00a872c7086
 
 module.exports = router;
