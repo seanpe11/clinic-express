@@ -14,7 +14,7 @@ const storage = new GridFsStorage({ url });
 // Set multer storage engine to the newly created object
 const upload = multer({ storage });
 
-class SupportingFiles {
+class FileService {
 
     // getting files through searching File name
     static getFile(query) {
@@ -49,4 +49,4 @@ class SupportingFiles {
 
 }
 
-export default SupportingFiles;
+export default FileService;
