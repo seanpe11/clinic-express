@@ -1,7 +1,7 @@
 <template>
     <div id="sidebar" class='col-2'>
         <div id="nav" class='position-fixed' style='width: inherit;'>
-            <h4>Jamalul Clinic</h4>
+            <h4>Jamalul Surgical and Medical Clinic</h4>
 
             <div v-if="name != 'null'" id="name">
                 <span>Patient Name</span>

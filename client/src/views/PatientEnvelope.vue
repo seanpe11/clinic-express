@@ -9,9 +9,19 @@
         </ol>
         <!-- Basic Information -->
         <div class="rectangle mb-25" id="patientInfo">
-          Basic Information
-          <div class="container mt-5">
-            <div class="row">
+          <h3>
+            Basic Information
+          </h3>
+          <div class="mt-3">
+            <table>
+              <tr><td class='header'>Name</td><td>{{ patient.name }}</td></tr>
+              <tr><td class='header'>Sex</td><td>{{ patient.sex }}</td></tr>
+              <tr><td class='header'>Age</td><td>{{ patient.age }}</td></tr>
+              <tr><td class='header'>Address</td><td>{{ patient.address }}</td></tr>
+              <tr><td class='header'>Occupation</td><td>{{ patient.occupation }}</td></tr>
+              <!-- Just add another row, change the header and the patient.X for new data-->
+            </table>
+            <!-- <div class="row">
               <div class="col-lg-6">
                 <h3>Name: {{ patient.name }} </h3>
               </div>
@@ -29,15 +39,25 @@
               <div class="col-lg-6">
                 <h3>Occupation: {{ patient.occupation }} </h3>
               </div>
-            </div>
+            </div> -->
           </div>
-          <button class='mb-25'><div class='add-btn' v-on:click='edit'>Edit Patient Info</div></button>
+          <button class='mt-3'><div class='add-btn' v-on:click='edit'>Edit Patient Info</div></button>
         </div>
         <!-- Edit patient form -->
         <div class="rectangle mb-25" id="editPatientInfo">
-          Editing Information
-          <div class="container mt-5">
-            <div class="row">
+          <h3>
+            Editing Information
+          </h3>
+          <div class="mt-3">
+            <table>
+              <tr><td class='header'>Name</td><td><input type="text" v-model="patient.name"/></td></tr>
+              <tr><td class='header'>Sex</td><td><input type="text" v-model="patient.sex"/></td></tr>
+              <tr><td class='header'>Age</td><td><input type="text" v-model="patient.age"/></td></tr>
+              <tr><td class='header'>Address</td><td><input type="text" v-model="patient.address"/></td></tr>
+              <tr><td class='header'>Occupation</td><td><input type="text" v-model="patient.occupation"/></td></tr>
+              <!-- Just add another row, change the header and the v-model for new data -->
+            </table>
+            <!-- <div class="row">
               <div class="col-lg-6">
                 <div class="form-group">
                   <label for="name">Name: </label>
@@ -70,11 +90,13 @@
                   <input type="text" v-model="patient.occupation"/>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
-          <button class='mb-25 default'><div class='cancel-btn' @click="cancel">Cancel</div></button>
-          <button class='mb-25 default'><div class='save-btn' @click="saveInfo">Save</div></button>
-          <button class='mb-25 default'><div class='delete-btn' @click="deletePatient">Delete Patient</div></button>
+          <div class="mt-3">
+            <button class='btn btn-warning' @click="cancel">Cancel</button>
+            <button class='btn btn-success ml-3' @click="saveInfo">Save</button>
+            <button class='btn btn-danger ml-3' @click="deletePatient">Delete Patient</button>
+          </div>
         </div>
         <input type="text" class="search" v-model="search" placeholder="Search visit dates" v-on:keyup.enter="searchQuery" />
         <button class='mb-25 default'><div class='add-btn' @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
@@ -301,6 +323,11 @@ button.default {
   background: transparent;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.header {
+  width: 50%;
+  font-weight: bold;
 }
 
 #content {
