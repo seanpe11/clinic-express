@@ -228,6 +228,7 @@ export default {
         object: '',
         assessment: '',
         plan: '',
+        painVisual: '',
         patient: this.id,
       };
       VisitService.createVisit(newVisit).then(() => {

@@ -39,6 +39,19 @@ class VisitService {
   static deleteVisit(id) {
     return axios.delete(`${url}/${id}`);
   }
+
+  static saveCanvas(id, data) {
+    return new Promise((resolve, reject) => {
+      try {
+        axios.post(`${url}/${id}/saveCanvas`, data)
+          .then(() => {
+            resolve();
+          });
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
 }
 
 export default VisitService;

@@ -28,6 +28,9 @@ const schema = new mongoose.Schema({
     plan: {
         type: String
     },
+    painVisual: {
+      type: String
+    },
     createdAt: {
         type: Date,
         default: Date.now

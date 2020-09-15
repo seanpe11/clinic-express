@@ -177,7 +177,12 @@
           </div>
         </div>
         <div class="rectangle mb-25">
-          <h3 class='mb-25'>Pain Visualization Tool</h3>
+          <div class="row mb-4">
+            <h3 class="col-6 m-0">{{ visit_date }}</h3>
+            <div class="col-6">
+              <div class="btn btn-success float-right" id="saveCanvasBtn">Save</div>
+            </div>
+          </div>
           <div class="d-flex justify-content-center">
             <canvas id="painVisualTool" style="border:1px solid #000000;"></canvas>
           </div>
@@ -224,6 +229,7 @@ export default {
       assessment: 'Assessment',
       plan: 'Plan',
     },
+    painVisual: '',
     visit_date: '-',
     visit: {},
   }),
@@ -236,7 +242,6 @@ export default {
     $('#editingAss').hide();
     $('#editingPla').hide();
     $('#editVisitInfo').hide();
-    this.startFabric();
   },
   methods: {
     // Reloads data from API
@@ -246,6 +251,8 @@ export default {
       VisitService.getVisitDetails(this.visit_id).then((visit) => {
         this.visit_date = moment(visit.createdAt).format('LLL');
         this.soap = visit;
+        this.painVisual = visit.painVisual;
+        this.startFabric();
       });
     },
     editVisit() {
@@ -267,13 +274,17 @@ export default {
         selection: false,
         border: 10,
       });
-      // TODO: When on load, call loadFromJSON() function to load prev state.
-      fabric.Image.fromURL(image, (img) => {
-        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-          scaleX: canvas.width / img.width,
-          scaleY: canvas.height / img.height,
+      console.log(`start fabric: ${this.painVisual}`);
+      if (this.painVisual) {
+        canvas.loadFromJSON(JSON.parse(this.painVisual), canvas.renderAll.bind(canvas));
+      } else {
+        fabric.Image.fromURL(image, (img) => {
+          canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+            scaleX: canvas.width / img.width,
+            scaleY: canvas.height / img.height,
+          });
         });
-      });
+      }
       canvas.isDrawingMode = true;
       canvas.freeDrawingBrush.color = '#000000';
       canvas.freeDrawingBrush.width = 10;
@@ -291,7 +302,18 @@ export default {
         console.log(e.target.value);
         canvas.requestRenderAll();
       });
-      // TODO: When change is detected to the Canvas, push state to DB as JSON.
+      $('#saveCanvasBtn').on('click', async () => {
+        const dataString = JSON.stringify(canvas.toJSON());
+        canvas.getObjects().forEach((o) => {
+          canvas.remove(o);
+        });
+        VisitService.saveCanvas(this.visit_id, { painVisual: dataString })
+          .then(() => {
+            this.loadData().then(() => {
+              this.startFabric();
+            });
+          });
+      });
     },
     // Front-end crud
     edit(section) {
