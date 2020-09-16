@@ -62,6 +62,9 @@ router.post('/:id', async (req, res) => {
         visit.object = req.body.object;
         visit.assessment = req.body.assessment;
         visit.plan = req.body.plan;
+        visit.weight = req.body.weight;
+        visit.heart_rate = req.body.heart_rate;
+        visit.blood_pressure = req.body.blood_pressure;
 
         await visit.save();
 

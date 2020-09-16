@@ -36,69 +36,115 @@
               </div>
               <div class="modal-body">
                 <!-- patient information modal -->
-                <div class="container">
-                  <form>
-                    <div class="form-group">
-                      <label for="patientName">Name:</label>
-                      <input class="form-control" type="text" name="name" v-model="name" required />
-                    </div>
-                    <br />
-                    <div class="">
-                      <div class="row">
-                        <div class="col-md-3 mr-5">
-                          <label for="patientAge">Age:</label>
-                          <input
-                            id="agebox"
-                            class="form-control"
-                            type="text"
-                            name="patientAge"
-                            v-model="age"
-                            required
-                          />
-                        </div>
-                        <div class="col-md-5">
-                          <label>Sex:</label>
-                          <div class="form-group">
-                            <select id="inputState" class="form-control" v-model="sex">
-                              <option selected>Male</option>
-                              <option>Female</option>
-                            </select>
-                          </div>
-                        </div>
+                <form>
+                  <div class="form-group">
+                    <label for="patientName">Name:</label>
+                    <input class="form-control" type="text" name="name" v-model="name" required />
+                  </div>
+                  <br />
+                  <div class="row">
+                    <div class="col-md-5">
+                      <label>Sex:</label>
+                      <div class="form-group">
+                        <select id="inputState" class="form-control" v-model="sex">
+                          <option selected>Male</option>
+                          <option>Female</option>
+                        </select>
                       </div>
                     </div>
-                    <br />
-                    <div class="form-group">
-                      <label for="patientAddress">Address:</label>
-                      <input
-                        class="form-control"
-                        type="text"
-                        name="patientAddress"
-                        v-model="address"
-                        required
-                      />
-                    </div>
-                    <br />
-                    <div class="form-group">
-                      <label for="patientOccupation">Occupation:</label>
-                      <input
-                        class="form-control"
-                        type="text"
-                        name="patientOccupation"
-                        v-model="occupation"
-                        required
-                      />
-                    </div>
-                    <br>
-                    <div class="form-group">
-                      <div class="container">
-                        <div class="row text-center">
-                          <h4 style="color: red;">{{ errorMessage }}</h4>
-                        </div>
+                    <div class="col-md-5">
+                      <label>Marital Status:</label>
+                      <div class="form-group">
+                        <select id="inputState" class="form-control" v-model="marital_status">
+                          <option selected>Single</option>
+                          <option>Married</option>
+                        </select>
                       </div>
                     </div>
-                  </form>
-                </div>
+                  </div>
+                  <br />
+                  <div class="form-group">
+                    <strong>Address</strong> <br>
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <label for="patientStreet">Street:</label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="patientStreet"
+                          v-model="street"
+                          required
+                        />
+                      </div>
+                      <div class="col-12 col-md-3">
+                        <label for="patientCity">City:</label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="patientCity"
+                          v-model="city"
+                          required
+                        />
+                      </div>
+                      <div class="col-12 col-md-3">
+                        <label for="patientProvince">Province:</label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="patientProvince"
+                          v-model="province"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <br />
+
+                  <div class="form-group">
+                    <label for="patientNumber">Contact Number:</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="patientNumber"
+                      v-model="contact_number"
+                      required
+                    />
+                  </div>
+
+                  <br />
+
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <label for="patientBirthday">Date of Birth:</label>
+                        <input
+                          class="form-control"
+                          type="date"
+                          name="patientBirthday"
+                          v-model="date_of_birth"
+                          required
+                        />
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label for="patientHeight">Height:</label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          name="patientHeight"
+                          v-model="height"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="form-group" v-if="errorMessage">
+                    <div class="row text-center">
+                      <h4 style="color: red;">{{ errorMessage }}</h4>
+                    </div>
+                  </div>
+                </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="mb-25" data-dismiss="modal">Close</button>
@@ -142,10 +188,14 @@ export default {
   },
   data: () => ({
     name: '',
-    age: '',
     sex: '',
-    address: '',
-    occupation: '',
+    street: '',
+    city: '',
+    province: '',
+    date_of_birth: '',
+    contact_number: '',
+    marital_status: '',
+    height: '',
     search: '',
     errorMessage: '',
     // replace this array to the results of a mongodb query
@@ -167,13 +217,26 @@ export default {
   methods: {
     async savePatient() {
       this.errorMessage = '';
+      const address = {
+        street: this.street,
+        city: this.city,
+        province: this.province,
+      };
+      const secAddress = {
+        street: 'Default',
+        city: 'Default',
+        province: 'Default',
+      };
       const newPatient = {
         name: this.name,
-        age: this.age,
         sex: this.sex,
-        address: this.address,
-        occupation: this.occupation,
+        address: [address, secAddress],
+        date_of_birth: this.date_of_birth,
+        contact_number: this.contact_number,
+        marital_status: this.marital_status,
+        height: this.height,
       };
+      console.log(newPatient);
       PatientService.createPatient(newPatient).then(() => {
         document.location.reload();
       }).catch((err) => {

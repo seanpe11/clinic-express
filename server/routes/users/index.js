@@ -12,17 +12,17 @@ router.post('/', async (req, res) => {
     let { error } = validateRequestBody(req.body);
     if(error) return res.status(400).json(error.details[0].message);
 
-    let user = await User.findOne({ email: req.body.email });
-    if(user) return res.status(400).json('Email already registered');
+    let user = await User.findOne({ username: req.body.username });
+    if(user) return res.status(400).json('Username already registered');
 
     let hash = await bcrypt.hash(req.body.password, bcrypt.genSaltSync(10));
 
     let new_user = await User.create({
-        email: req.body.email,
+        username: req.body.username,
         password: hash,
         first_name: req.body.first_name,
         last_name: req.body.last_name,
-        type: req.body.type
+        isAdmin: req.body.isAdmin
     });
 
     if(!new_user) return res.status(500).json('Something went wrong while creating a new user');
@@ -45,8 +45,8 @@ function validateRequestBody (body) {
         first_name: Joi.string().min(2).max(20).required(),
         last_name: Joi.string().min(2).max(20).required(),
         password: Joi.string().min(6).max(20).required(),
-        email: Joi.string().email().required(),
-        type: Joi.string().required()
+        username: Joi.string().min(6).max(20).required(),
+        type: Joi.boolean().required()
     });
 
     return schema.validate(body);

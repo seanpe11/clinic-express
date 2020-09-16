@@ -13,13 +13,18 @@
             Basic Information
           </h3>
           <div class="mt-3">
-            <table>
+            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
               <tr><td class='header'>Name</td><td>{{ patient.name }}</td></tr>
               <tr><td class='header'>Sex</td><td>{{ patient.sex }}</td></tr>
-              <tr><td class='header'>Age</td><td>{{ patient.age }}</td></tr>
-              <tr><td class='header'>Address</td><td>{{ patient.address }}</td></tr>
-              <tr><td class='header'>Occupation</td><td>{{ patient.occupation }}</td></tr>
-              <!-- Just add another row, change the header and the patient.X for new data-->
+              <tr><td class='header'>Age</td><td>{{  }}</td></tr> <!-- calculate from date of birth -->
+              <tr v-for="(add, index) in patient.address" :key='add._id'>
+                <td class='header'>Address {{index+1}}</td><td v-if='add.street !== "Default"'>{{ `${add.street}, ${add.city}, ${add.province}`}}</td>
+              </tr>
+              <tr><td class='header'>Date of Birth</td><td>{{ patient.date_of_birth }}</td></tr>
+              <tr><td class='header'>Contact Number</td><td>{{ patient.contact_number }}</td></tr>
+              <tr><td class='header'>Marital Status</td><td>{{ patient.marital_status }}</td></tr>
+              <tr><td class='header'>Height</td><td>{{ patient.height }}</td></tr>
+              <tr v-if="patient.previous_names && patient.previous_names.length"><td class='header'>Previous Names</td><td>{{ patient.previous_names }}</td></tr>
             </table>
             <!-- <div class="row">
               <div class="col-lg-6">
@@ -49,12 +54,60 @@
             Editing Information
           </h3>
           <div class="mt-3">
-            <table>
+            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
               <tr><td class='header'>Name</td><td><input type="text" v-model="patient.name"/></td></tr>
-              <tr><td class='header'>Sex</td><td><input type="text" v-model="patient.sex"/></td></tr>
-              <tr><td class='header'>Age</td><td><input type="text" v-model="patient.age"/></td></tr>
-              <tr><td class='header'>Address</td><td><input type="text" v-model="patient.address"/></td></tr>
-              <tr><td class='header'>Occupation</td><td><input type="text" v-model="patient.occupation"/></td></tr>
+              <tr>
+                <td class='header'>Sex</td>
+                <td>
+                  <div class="form-group">
+                    <select id="inputState" class="form-control" style='width: auto;' v-model="patient.sex">
+                      <option selected>Male</option>
+                      <option>Female</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr v-for="(add, index) in patient.address" :key='add._id'>
+                <td colspan="2">
+                  <strong><u>Address {{index+1}}</u></strong>
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <label for="patientStreet">Street:</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="patientStreet"
+                        v-model="add.street"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <label for="patientCity">City:</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="patientCity"
+                        v-model="add.city"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <label for="patientProvince">Province:</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="patientProvince"
+                        v-model="add.province"
+                        required
+                      />
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr><td class='header'>Date of Birth</td><td><input type="date" v-model="patient.date_of_birth"/></td></tr>
+              <tr><td class='header'>Contact Number</td><td><input type="text" v-model="patient.contact_number"/></td></tr>
+              <tr><td class='header'>Marital Status</td><td><input type="text" v-model="patient.marital_status"/></td></tr>
+              <tr><td class='header'>Height</td><td><input type="text" v-model="patient.height"/></td></tr>
               <!-- Just add another row, change the header and the v-model for new data -->
             </table>
             <!-- <div class="row">
@@ -179,14 +232,16 @@ export default {
     Sidebar,
   },
   data: () => ({
-    name: {
-      name: '',
-    },
     id: '',
-    age: '',
-    sex: '',
-    address: '',
-    occupation: '',
+    // name: '',
+    // sex: '',
+    // street: '',
+    // city: '',
+    // province: '',
+    // date_of_birth: '',
+    // contact_number: '',
+    // marital_status: '',
+    // height: '',
     patient: {},
     links: [
       {
@@ -228,6 +283,9 @@ export default {
         object: '',
         assessment: '',
         plan: '',
+        weight: '',
+        blood_pressure: '',
+        heart_rate: '',
         painVisual: '',
         patient: this.id,
       };
@@ -249,14 +307,21 @@ export default {
       try {
         $('#patientInfo').show();
         $('#editPatientInfo').hide();
-        const toSend = {
-          name: this.patient.name,
-          address: this.patient.address,
-          sex: this.patient.sex,
-          age: this.patient.age,
-          occupation: this.patient.occupation,
-        };
-        PatientService.updatePatient(this.id, toSend)
+        // const address = {
+        //   street: this.street,
+        //   city: this.city,
+        //   province: this.province,
+        // };
+        // const toSend = {
+        //   name: this.name,
+        //   sex: this.sex,
+        //   address,
+        //   date_of_birth: this.date_of_birth,
+        //   contact_number: this.contact_number,
+        //   marital_status: this.marital_status,
+        //   height: this.height,
+        // };
+        PatientService.updatePatient(this.id, this.patient)
           .then(() => {
             this.loadData();
           });
@@ -327,7 +392,7 @@ button.default {
 }
 
 .header {
-  width: 50%;
+  width: 2in;
   font-weight: bold;
 }
 

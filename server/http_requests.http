@@ -1,0 +1,13 @@
+# An alternative to POSTMAN in VSCode. Use via REST Client by Huachao Mao in VS Code Extension Library
+POST http://localhost:5000/api/login/newAccount
+Content-Type: application/json
+
+{
+  "first_name": "Admin",
+  "last_name": " ",
+  "username": "admin",
+  "password": "admin",
+  "isAdmin": true
+}
+
+### <- new requests are seperated by 3 hash symbols

@@ -63,9 +63,9 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath },
       });
     } else {
-      const user = localStorage.getItem('type');
-      if (to.matched.some((record) => record.meta.is_admin)) {
-        if (user === 'Admin') {
+      const user = localStorage.getItem('isAdmin');
+      if (to.matched.some((record) => record.meta.isAdmin)) {
+        if (user === true) { // true = is an admin
           // next({ path: '/' }) go to admin page
           next();
         } else {

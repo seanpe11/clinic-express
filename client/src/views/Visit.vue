@@ -21,8 +21,10 @@
             Visit Basic Information
           </h3>
           <div class="mt-3">
-            <table>
-              <tr><td class='header'>Name</td><td><!-- {{ patient.X }} -->Test Data</td></tr>
+            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
+              <tr><td class='header'>Weight</td><td>{{visitInfo.weight}}</td></tr>
+              <tr><td class='header'>Heart Rate</td><td>{{visitInfo.heart_rate}}</td></tr>
+              <tr><td class='header'>Blood Pressure</td><td>{{visitInfo.blood_pressure}}</td></tr>
               <!-- Just add another row, change the header and the patient.X for new data-->
             </table>
             <!-- <div class="row">
@@ -53,8 +55,10 @@
             Editing Visit Information
           </h3>
           <div class="mt-3">
-            <table>
-              <tr><td class='header'>Name</td><td><input type="text"/></td></tr>
+            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
+              <tr><td class='header'>Weight</td><td><input type="text" v-model="visitInfo.weight"/></td></tr>
+              <tr><td class='header'>Heart Rate</td><td><input type="text" v-model="visitInfo.heart_rate"/></td></tr>
+              <tr><td class='header'>Blood Pressure</td><td><input type="text" v-model="visitInfo.blood_pressure" /></td></tr>
               <!-- Just add another row, change the header and the v-model for new data -->
             </table>
             <!-- <div class="row">
@@ -229,6 +233,11 @@ export default {
       assessment: 'Assessment',
       plan: 'Plan',
     },
+    visitInfo: {
+      weight: 'Weight',
+      blood_pressure: 'BP',
+      heart_rate: 'Heart Rate',
+    },
     painVisual: '',
     visit_date: '-',
     visit: {},
@@ -252,6 +261,7 @@ export default {
         this.visit_date = moment(visit.createdAt).format('LLL');
         this.soap = visit;
         this.painVisual = visit.painVisual;
+        this.visitInfo = visit;
         this.startFabric();
       });
     },
@@ -265,7 +275,13 @@ export default {
       this.loadData();
     },
     async saveInfo() {
-      // Save Visit basic info
+      console.log(this.soap);
+      VisitService.updateVisit(this.visit_id, this.visitInfo)
+        .then(() => {
+          this.loadData();
+          $('#visitInfo').show();
+          $('#editVisitInfo').hide();
+        });
     },
     startFabric() {
       const canvas = new fabric.Canvas('painVisualTool', {
@@ -371,7 +387,7 @@ textarea {
 }
 
 .header {
-  width: 50%;
+  width: 2in;
   font-weight: bold;
 }
 </style>

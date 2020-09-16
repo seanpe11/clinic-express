@@ -19,6 +19,9 @@
               <div class="row">
                 <span style='color: grey; font-size: 12px;'>Contact admin if you forgot your <br> username or password</span>
               </div>
+              <div class="row mt-3">
+                <span style='color: grey; font-size: 12px;'>Sample User: <br> username: <strong>johndoe</strong> or password: <strong>password</strong></span>
+              </div>
             </div>
           </div>
         </div>
@@ -42,7 +45,7 @@ export default {
     login() {
       this.errorMessage = null;
       const body = {
-        email: this.username,
+        username: this.username,
         password: this.password,
       };
 

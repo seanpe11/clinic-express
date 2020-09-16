@@ -5,9 +5,9 @@ const mongoose = require('mongoose');
 const schema = new mongoose.Schema({
     first_name: String,
     last_name: String,
-    email: String,
+    username: String,
     password: String,
-    type: String,
+    isAdmin: Boolean,
     createdAt: {
         type: Date,
         default: Date.now()
