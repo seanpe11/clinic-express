@@ -1,5 +1,5 @@
 <template>
-    <div id="sidebar" class='col-2'>
+    <div id="sidebar" class='col-2 d-none d-md-block'>
         <div id="nav" class='position-fixed' style='width: inherit;'>
             <h4>Jamalul Surgical and Medical Clinic</h4>
             <button class="btn" @click="logout()">Logout</button>
@@ -25,7 +25,7 @@
 export default {
   name: 'Sidebar',
   props: {
-    name: Object,
+    name: String,
     links: Array,
   },
   methods: {

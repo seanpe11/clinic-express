@@ -2,7 +2,7 @@
   <div class="home">
     <div class="row">
       <Sidebar name="null" :links="links" />
-      <div id="content" class="col-10">
+      <div id="content" class="col-md-10 col-12">
         <!-- search field -->
         <input type="text" class="search" v-model="search" placeholder="Search patient envelopes" v-on:keyup.enter="searchQuery" />
 
