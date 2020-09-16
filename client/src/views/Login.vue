@@ -12,7 +12,10 @@
               <div class="row mb-3">
                 <span id='errorMsg' style='color: red; font-size: 12px;'></span>
               </div>
-              <button type="button" class="btn btn-success mb-3">Login</button> <!-- add @click here to do login process -->
+              <div class="row mb-3 text-center" v-if="errorMessage">
+                <p>{{ errorMessage }}</p>
+              </div>
+              <button type="button" class="btn btn-success mb-3" @click="login()">Login</button> <!-- add @click here to do login process -->
               <div class="row">
                 <span style='color: grey; font-size: 12px;'>Contact admin if you forgot your <br> username or password</span>
               </div>
@@ -25,13 +28,35 @@
 </template>
 
 <script>
+import LoginService from '../LoginService';
+
 export default {
   name: 'PatientEnvelope',
   data: () => ({
     username: '',
     password: '',
+    errorMessage: null,
     // data here
   }),
+  methods: {
+    login() {
+      this.errorMessage = null;
+      const body = {
+        email: this.username,
+        password: this.password,
+      };
+
+      LoginService.login(body)
+        .then(() => {
+          document.location.replace('/');
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.status === 400) this.errorMessage = err.response.data;
+          }
+        });
+    },
+  },
   // TODO: When there is an error, change text of #errorMsg
   // TODO: When account is admin route to admin pages, if account is not admin, route to landing page (search)
   // Check https://www.notion.so/Vue-Sessions-f4de4e64a9e84c22b2eedb32b8e88567 for Vue Session
@@ -57,5 +82,10 @@ export default {
 
 .login-body {
   width: 70%;
+}
+
+p {
+  color: red;
+  margin: 0px;
 }
 </style>
