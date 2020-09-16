@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
+import Admin from '../views/Admin.vue';
+import Billing from '../views/Billing.vue';
 
 Vue.use(VueRouter);
 
@@ -20,6 +22,24 @@ const routes = [
     component: Login,
     meta: {
       guest: true,
+    },
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
+    meta: {
+      requiresAuth: true,
+      isAdmin: true,
+    },
+  },
+  {
+    path: '/billing',
+    name: 'Billing',
+    component: Billing,
+    meta: {
+      requiresAuth: true,
+      isAdmin: true,
     },
   },
   {
@@ -64,14 +84,19 @@ router.beforeEach((to, from, next) => {
       });
     } else {
       const user = localStorage.getItem('isAdmin');
+      console.log (user);
       if (to.matched.some((record) => record.meta.isAdmin)) {
-        if (user === true) { // true = is an admin
-          // next({ path: '/' }) go to admin page
+        if (user) { // true = is an admin
+          console.log ("one");
+          // next({ path: '/admin',
+          // params: { nextUrl: to.fullPath }, });
           next();
         } else {
+          console.log("two");
           next({ path: '/' });
         }
       } else {
+        console.log("three");
         next();
       }
     }
