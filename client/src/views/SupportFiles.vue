@@ -17,7 +17,7 @@
         <div class="rectangle mg-25">
           <div class="row mb-25">
               <h2 class='col-6'>Supporting Files</h2>
-              <button class='add-btn col-6'> + Upload File </button>
+              <input type="file" class='add-btn col-6' value="+ Upload File" />
           </div>
           <ul class="list-group">
             <li class="list-group-item" v-for="file in files" :key='file.filename'><button>{{file.filename}}</button></li>
