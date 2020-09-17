@@ -17,7 +17,10 @@
         <div class="rectangle mg-25">
           <div class="row mb-25">
               <h2 class='col-6'>Supporting Files</h2>
-              <input type="file" class='add-btn col-6' value="+ Upload File" />
+              <form enctype="multipart/form-data" >
+                <input type="file" ref="file" class='add-btn col-6'/>
+                <button @click="uploadFile">Upload</button>
+              </form>
           </div>
           <ul class="list-group">
             <li class="list-group-item" v-for="file in files" :key='file.filename'><button>{{file.filename}}</button></li>
@@ -32,6 +35,7 @@
 /* eslint-env jquery */
 import Sidebar from '@/components/Sidebar.vue';
 import $ from 'jquery';
+import FileService from '../FileService.js'
 
 export default {
   name: 'SupportFile',
@@ -48,6 +52,30 @@ export default {
     // replace this with the mongodb query result
     files: [],
   }),
+
+  methods: {
+    async uploadFile() {
+      try{
+        const file = {
+          file: this.file,
+          visitID: ''
+        }
+
+        FileService.createFile(file);
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    async loadfile() {
+      try {
+        const files = FileService.getFile({});
+        this.files = files;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
 };
 
 </script>

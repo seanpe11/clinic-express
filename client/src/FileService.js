@@ -23,13 +23,13 @@ class FileService {
                let searchQuery = '';
                if(query !== '') searchQuery = `?s=${query}`;
 
-               axios.get(url + searchQuery)
+               axios.get(url)
                 .then((res) => {
                     const { data } = res;
                     resolve(
                         data.map((files) => ({
                         ...files,
-                        link: `/patients/envelope/${patient._id}`,
+                        link: ``, // TODO: link of opening a file
                         })),
                     );
                 });
@@ -42,7 +42,23 @@ class FileService {
 
     static createFile(file){
         return new Promise((resolve, reject) => {
+            try{
+                return axios.post(url,file);
+            } catch (err) {
+                console.log(err);
+                reject (err);
+            }
+        });
+    }
 
+    static deleteFile(fileID){
+        return new Promise((resolve, reject) =>{
+            try{
+                axios.delete(fileID);
+            } catch(err) {
+                console.log(err);
+                reject(err);
+            }
         });
     }
 
