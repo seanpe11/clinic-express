@@ -54,9 +54,4 @@ router.post('/:id', async (req, res) => {
     }
 });
 
-router.post('/testingthejuicer', (req, res) => {
-    console.log(req.body.text)
-    res.status(200).send('it worked')
-})
-
 module.exports = router;

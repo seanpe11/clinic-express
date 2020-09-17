@@ -2,6 +2,8 @@
 
 'use strict';
 
+require('dotenv').config();
+
 const router = require('express').Router();
 const async = require('async');
 const mongoose = require("mongoose");
@@ -12,16 +14,26 @@ const GridFsStorage = require('multer-gridfs-storage');
 const Files = require('../../models').files;
 
 try{
-    let gfs = new mongoose.mongo.GridFSBucket(Files, {
-        bucketName: 'files'
+    const url = process.env.TEST_DB;
+    const connect = mongoose.createConnection(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     });
+    let gfs;
+
+    connect.once('open', () => {
+        gfs = new mongoose.mongo.GridFSBucket(connect.db, {
+            bucketName: "uploads"
+        });
+        console.log('multer connected');
+    })
 } catch (err) {
     console.log(err);
 }
 
 // Create a storage object with a configuration 
 const storage = new GridFsStorage({ 
-    url: Files,
+    url: process.env.TEST_DB,
     file: (req, file) => {
         return new Promise((resolve, reject) => {
             if (err) return reject(err);
@@ -44,10 +56,13 @@ const storage = new GridFsStorage({
 // Set multer storage engine to the newly created object
 const upload = multer({ storage });
 
-// Uploading Files
+// Uploading single file
 router.post('/:filename',  upload.single("file"), async (req, res) => {
     try {
-        let file = await Files.create({ filename: req.files.filename });
+        let file = await Files.create({ 
+            filename: req.files.filename, 
+            visitID: req.body.visitID,
+        });
         res.json(file);
     } catch (err) {
         console.log(err);
@@ -61,7 +76,7 @@ router.get('/', async (req, res) => {
     try {
         Files.find().exec()
             .then(function (result){
-                res.json(result);
+                res.status(200).json(result);
             })
             .catch(() => {
                 res.redirect('/patients/visits');
@@ -72,5 +87,21 @@ router.get('/', async (req, res) => {
         return res.status(500).json('Loading Files Failed');
     }
 });
+
+// Getting Files by Visit ID
+router.get('/:visitID', async (req, res) => {
+    try {
+        Files.find({ visitID: req.body.visitID }).exec()
+            .then(function (result) {
+                res.json(result);
+            })
+            .catch(() => {
+                res.redirect('/patients/visits');
+            })
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json('Loading Files Failed');
+    }
+})
 
 module.exports = router;
