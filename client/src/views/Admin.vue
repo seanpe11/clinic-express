@@ -51,11 +51,11 @@
                   <br />
 
                   <div class="form-group">
-                    <label for="patientNumber">Username:</label>
+                    <label for="username">Username:</label>
                     <input
                       class="form-control"
                       type="text"
-                      name="patientNumber"
+                      name="username"
                       v-model="username"
                       required
                     />
@@ -66,17 +66,17 @@
                   <div class="form-group">
                     <div class="row">
                       <div class="col-12 col-md-6">
-                        <label for="patientBirthday">Password:</label>
+                        <label for="password">Password:</label>
                         <input
                           class="form-control"
-                          type="text"
-                          name="patientBirthday"
+                          type="password"
+                          name="password"
                           v-model="password"
                           required
                         />
                       </div>
                       <div class="col-12 col-md-6">
-                        <label for="patientHeight">Type of Account:</label>
+                        <label for="accountType">Type of Account:</label>
                         <div class="form-group">
                         <select id="inputState" class="form-control" v-model="isAdmin">
                           <option selected>Doctor</option>
@@ -113,12 +113,9 @@
             </div>
             </div>
         </div>
-
-        
-
         <!-- END LOOP -->
+
         <!-- Modal -->
-        <!-- info modal -->
         <div
           class="modal"
           id="infoModal"
@@ -130,7 +127,6 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLabel">[account name]</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -139,30 +135,67 @@
                 <!-- account information modal -->
                 <form>
                   <div class="row">
-                    <div class="col-md-5">
-                      <label>Username:</label>
-                      <input class="form-control" type="text" name="firstname" v-model="first_name" required />
-                    </div>
-
-                    <div class="col-md-5">
-                      <label>Password:</label>
-                      <input class="form-control" type="text" name="lastname" v-model="last_name" required />
-                    </div>
+                  <!--TO DO: {{ user.first_name }}-->
+                    <tr><td class='header'>First Name:</td><td>First</td></tr>
+                    <br>
+                    <tr><td class='header'>Last Name:</td><td>Last</td></tr>
+                    <br>
+                    <tr><td class='header'>Username:</td><td>username@gmail.com</td></tr>
+                    <br>
+                    <tr><td class='header'>Password:</td><td>pw</td></tr>
                   </div>
-                  <br />
                   <br>
                   <div class="form-group" v-if="errorMessage">
                     <div class="row text-center">
                       <h4 style="color: red;">{{ errorMessage }}</h4>
-                    </div>
+                    </div> 
                   </div>
                 </form>
+
               </div>
               <div class="modal-footer">
-                <button type="button" class="mb-25" data-dismiss="modal">Close</button>
-                <button type="button" class="mb-25" @click="savePatient">Edit</button>
-                <button type="button" class="mb-25" @click="savePatient">Save</button>
+              <!-- TO DO: @CLICK -->
+                <button type="button" class="mb-25">Delete</button>
+                <button type="button" class="mb-25">Edit</button>
               </div>
+
+                          <!--EDIT ACCOUNT TO HIDE/SHOW-->
+<!--
+              // Edit Account Info
+              <div class="modal-content" id="editAccountInfo">
+              <div class="modal-header">
+               <h5 class="modal-title" id="infoModalLabel">Edit Account Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="row">
+                    <tr><td class='header'>First Name:</td><td><input type="text" v-model="user.first_name"/></td></tr>
+                    <br>
+                    <tr><td class='header'>Last Name:</td><td><input type="text" v-model="user.last_name"/></td></tr>
+                    <br>
+                    <tr><td class='header'>Username:</td><td><input type="text" v-model="user.username"/></td></tr>
+                    <br>
+                    <tr><td class='header'>Password:</td><td><input type="text" v-model="user.password"/></td></tr>
+                  </div>
+                  <br>
+                  <div class="form-group" v-if="errorMessage">
+                    <div class="row text-center">
+                      <h4 style="color: red;">{{ errorMessage }}</h4>
+                    </div> 
+                  </div>
+                </form>
+
+              </div>
+              <div class="modal-footer">
+              // TO DO: @CLICK
+                <button type="button" class="mb-25">Cancel</button>
+                <button type="button" class="mb-25">Save</button>
+              </div>
+            </div> -->
+
             </div>
           </div>
         </div>
@@ -212,20 +245,9 @@ export default {
   methods: {
     async savePatient() {
       this.errorMessage = '';
-      // const address = {
-      //   street: this.street,
-      //   city: this.city,
-      //   province: this.province,
-      // };
-      // const secAddress = {
-      //   street: 'Default',
-      //   city: 'Default',
-      //   province: 'Default',
-      // };
       const newAccount = {
         first_name: this.first_name,
         last_name: this.last_name,
-        // address: [address, secAddress],
         username: this.username,
         password: this.password,
         isAdmin: this.isAdmin,
@@ -317,9 +339,10 @@ export default {
   border-radius: 10px;
 }
 
-/* #agebox {
-  width: 50px;
-} */
+.header {
+  width: 2in;
+  font-weight: bold;
+}
 
 .modal-footer > button {
   width: 100px;
