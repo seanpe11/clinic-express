@@ -4,7 +4,7 @@
       <Sidebar name="null" :links="links" />
       <div id="content" class="col-10">
 
-        <!-- Editable table -->
+      <!-- List start-->
         <div class="card">
         <h3 class="card-header text-center font-weight-bold text-uppercase py-4">List of Services</h3>
         <div class="card-body">
@@ -82,7 +82,7 @@
             </div>
         </div>
         </div>
-<!-- Editable table -->
+      <!-- List End-->
       </div>
     </div>
   </div>
