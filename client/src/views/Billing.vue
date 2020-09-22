@@ -3,7 +3,86 @@
     <div class="row">
       <Sidebar name="null" :links="links" />
       <div id="content" class="col-10">
-        <h7> Hi </h7>
+
+        <!-- Editable table -->
+        <div class="card">
+        <h3 class="card-header text-center font-weight-bold text-uppercase py-4">List of Services</h3>
+        <div class="card-body">
+            <div id="table" class="table-editable">
+            <button type="button" class="btn btn-link table-add float-right mb-3 mr-2">+ Add Row</button>
+            <table class="table table-bordered table-responsive-md table-striped text-center">
+                <thead>
+                <tr>
+                    <th class="text-center">Service</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Note</th>
+                    <th class="text-center">Custom</th>
+                </tr>
+                </thead>
+
+                <!--START LOOP FOR ROWS-->
+                <tbody>
+                <tr>
+                    <td class="pt-3-half">Check up with Dra. Jamalul</td>
+                    <td class="pt-3-half">300</td>
+                    <td class="pt-3-half"></td>
+                    </td>
+                    <td>
+                    <button type="button" class="btn btn-success btn-rounded btn-sm" @click="editRow">Edit</button>
+                    <div class="divider"/>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm" @click="deleteRow">Delete</button>
+                    </td>
+                <tr class="hide">
+                    <td class="pt-3-half">Check up with Dr. Jamalul</td>
+                    <td class="pt-3-half">500</td>
+                    <td class="pt-3-half"></td>
+                    </td>
+                    <td>
+                    <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
+                    <div class="divider"/>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
+                    </td>
+                </tr>
+                <tr class="hide">
+                    <td class="pt-3-half">Check up Dra Jamalul w/ ECG</td>
+                    <td class="pt-3-half">500</td>
+                    <td class="pt-3-half"></td>
+                    </td>
+                    <td>
+                    <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
+                    <div class="divider"/>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
+                    </td>
+                </tr>
+                <tr class="hide">
+                    <td class="pt-3-half">Wound Cleaning Dr. Jamalul</td>
+                    <td class="pt-3-half">500</td>
+                    <td class="pt-3-half"></td>
+                    </td>
+                    <td>
+                    <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
+                    <div class="divider"/>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
+                    </td>
+                </tr>
+                <tr class="hide">
+                    <td class="pt-3-half">Circumcision</td>
+                    <td class="pt-3-half">1500</td>
+                    <td class="pt-3-half"></td>
+                    </td>
+                    <td>
+                    <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
+                    <div class="divider"/>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+                <!--END LOOP-->
+            </table>
+            </div>
+        </div>
+        </div>
+<!-- Editable table -->
       </div>
     </div>
   </div>
@@ -12,7 +91,6 @@
 <script>
 // @ is an alias to /src
 import Sidebar from '@/components/Sidebar.vue';
-import PatientService from '../PatientService';
 
 export default {
   name: 'Billing',
@@ -64,6 +142,12 @@ export default {
   padding: 0.25in 0.5in;
 }
 
+.divider{
+    width:5px;
+    height:auto;
+    display:inline-block;
+}
+
 /* Modal style */
 
 .modal-title {
@@ -84,6 +168,10 @@ export default {
   width: 500px;
   height: 225px;
 } */
+
+.pt-3-half {
+padding-top: 1.4rem;
+}
 
 .radiospacing {
   margin-left: 0.5in;
