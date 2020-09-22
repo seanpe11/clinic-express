@@ -10,11 +10,98 @@
           </li>
           <li class="breadcrumb-item active" aria-current="page">Visit Record</li>
         </ol>
-        <div class="rectangle mb-25">
-          <h3>{{ visit_date }}</h3>
-          <div class="btn btn-danger" @click="deleteVisit">Delete Visit</div>
+        <div class="rectangle mb-25 d-flex">
+          <h3 class="col-6 m-0">{{ visit_date }}</h3>
+          <div class="col-6">
+            <div class="btn btn-danger float-right" @click="deleteVisit">Delete Visit</div>
+          </div>
         </div>
-        <div class="rectangle mg-25">
+        <div class="rectangle mb-25" id='visitInfo'>
+          <h3>
+            Visit Basic Information
+          </h3>
+          <div class="mt-3">
+            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
+              <tr><td class='header'>Weight</td><td>{{visitInfo.weight}}</td></tr>
+              <tr><td class='header'>Heart Rate</td><td>{{visitInfo.heart_rate}}</td></tr>
+              <tr><td class='header'>Blood Pressure</td><td>{{visitInfo.blood_pressure}}</td></tr>
+              <!-- Just add another row, change the header and the patient.X for new data-->
+            </table>
+            <!-- <div class="row">
+              <div class="col-lg-6">
+                <h3>Name: {{ patient.name }} </h3>
+              </div>
+              <div class="col-lg-3">
+                <h3>Sex: {{ patient.sex }}</h3>
+              </div>
+              <div class="col-lg-3">
+                <h3>Age: {{ patient.age }}</h3>
+              </div>
+            </div>
+            <div class="row mt-4 mb-5">
+              <div class="col-lg-6">
+                <h3>Address: {{ patient.address }} </h3>
+              </div>
+              <div class="col-lg-6">
+                <h3>Occupation: {{ patient.occupation }} </h3>
+              </div>
+            </div> -->
+          </div>
+          <button class='mt-3'><div class='add-btn' v-on:click='editVisit'>Edit Patient Infos</div></button>
+        </div>
+        <!-- Edit patient form -->
+        <div class="rectangle mb-25"  id="editVisitInfo">
+          <h3>
+            Editing Visit Information
+          </h3>
+          <div class="mt-3">
+            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
+              <tr><td class='header'>Weight</td><td><input type="text" v-model="visitInfo.weight"/></td></tr>
+              <tr><td class='header'>Heart Rate</td><td><input type="text" v-model="visitInfo.heart_rate"/></td></tr>
+              <tr><td class='header'>Blood Pressure</td><td><input type="text" v-model="visitInfo.blood_pressure" /></td></tr>
+              <!-- Just add another row, change the header and the v-model for new data -->
+            </table>
+            <!-- <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="name">Name: </label>
+                  <input type="text" v-model="patient.name"/>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="name">Sex: </label>
+                  <input type="text" v-model="patient.sex"/>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <label for="name">Age: </label>
+                  <input type="text" v-model="patient.age"/>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-4 mb-5">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="name">Address: </label>
+                  <input type="text" v-model="patient.address"/>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="name">Occupation: </label>
+                  <input type="text" v-model="patient.occupation"/>
+                </div>
+              </div>
+            </div> -->
+          </div>
+          <div class="mt-3">
+            <button class='btn btn-warning' @click="cancelVisit">Cancel</button>
+            <button class='btn btn-success ml-3' @click="saveInfo">Save</button>
+          </div>
+        </div>
+        <div class="rectangle mb-25">
           <h2 class='mb-25'>SOAP File</h2>
           <ul class="nav nav-tabs mb-25" id="myTab" role="tablist">
             <li class="nav-item">
@@ -93,6 +180,25 @@
             </div>
           </div>
         </div>
+        <div class="rectangle mb-25">
+          <div class="row mb-4">
+            <h3 class="col-6 m-0">{{ visit_date }}</h3>
+            <div class="col-6">
+              <div class="btn btn-success float-right" id="saveCanvasBtn">Save</div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <canvas id="painVisualTool" style="border:1px solid #000000;"></canvas>
+          </div>
+          <div class="card mt-5">
+            <div class="card-body">
+              <h4 class="card-title">Tool Kit</h4>
+              <button id="clearCanvasBtn" class="btn btn-danger">Clear Canvas</button>
+              <input type="color" id="colorPicker" name="colorPicker" value="#e32400">
+              <label for="colorPicker">Change Brush Color</label>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -102,6 +208,8 @@
 /* eslint-env jquery */
 import Sidebar from '@/components/Sidebar.vue';
 import moment from 'moment';
+import { fabric } from 'fabric';
+import image from '@/assets/human-body.jpg';
 import VisitService from '../VisitService';
 
 export default {
@@ -125,6 +233,12 @@ export default {
       assessment: 'Assessment',
       plan: 'Plan',
     },
+    visitInfo: {
+      weight: 'Weight',
+      blood_pressure: 'BP',
+      heart_rate: 'Heart Rate',
+    },
+    painVisual: '',
     visit_date: '-',
     visit: {},
   }),
@@ -136,6 +250,7 @@ export default {
     $('#editingObj').hide();
     $('#editingAss').hide();
     $('#editingPla').hide();
+    $('#editVisitInfo').hide();
   },
   methods: {
     // Reloads data from API
@@ -145,6 +260,75 @@ export default {
       VisitService.getVisitDetails(this.visit_id).then((visit) => {
         this.visit_date = moment(visit.createdAt).format('LLL');
         this.soap = visit;
+        this.painVisual = visit.painVisual;
+        this.visitInfo = visit;
+        this.startFabric();
+      });
+    },
+    editVisit() {
+      $('#visitInfo').hide();
+      $('#editVisitInfo').show();
+    },
+    cancelVisit() {
+      $('#visitInfo').show();
+      $('#editVisitInfo').hide();
+      this.loadData();
+    },
+    async saveInfo() {
+      console.log(this.soap);
+      VisitService.updateVisit(this.visit_id, this.visitInfo)
+        .then(() => {
+          this.loadData();
+          $('#visitInfo').show();
+          $('#editVisitInfo').hide();
+        });
+    },
+    startFabric() {
+      const canvas = new fabric.Canvas('painVisualTool', {
+        width: 700,
+        height: 700,
+        selection: false,
+        border: 10,
+      });
+      console.log(`start fabric: ${this.painVisual}`);
+      if (this.painVisual) {
+        canvas.loadFromJSON(JSON.parse(this.painVisual), canvas.renderAll.bind(canvas));
+      } else {
+        fabric.Image.fromURL(image, (img) => {
+          canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+            scaleX: canvas.width / img.width,
+            scaleY: canvas.height / img.height,
+          });
+        });
+      }
+      canvas.isDrawingMode = true;
+      canvas.freeDrawingBrush.color = '#000000';
+      canvas.freeDrawingBrush.width = 10;
+      canvas.requestRenderAll();
+      $('#clearCanvasBtn').on('click', () => {
+        canvas.getObjects().forEach((o) => {
+          if (o !== canvas.backgroundImage) {
+            canvas.remove(o);
+          }
+        });
+        canvas.requestRenderAll();
+      });
+      $('#colorPicker').on('change', (e) => {
+        canvas.freeDrawingBrush.color = e.target.value;
+        console.log(e.target.value);
+        canvas.requestRenderAll();
+      });
+      $('#saveCanvasBtn').on('click', async () => {
+        const dataString = JSON.stringify(canvas.toJSON());
+        canvas.getObjects().forEach((o) => {
+          canvas.remove(o);
+        });
+        VisitService.saveCanvas(this.visit_id, { painVisual: dataString })
+          .then(() => {
+            this.loadData().then(() => {
+              this.startFabric();
+            });
+          });
       });
     },
     // Front-end crud
@@ -158,7 +342,6 @@ export default {
       $(`#edit${section}`).show();
       $(`#editing${section}`).hide();
       this.loadData();
-      console.log(this.soap);
     },
     // Send to DB, also front-end change
     async save(section) {
@@ -170,8 +353,15 @@ export default {
           this.loadData();
         });
     },
-    deleteVisit() {
-      VisitService.deleteVisit(this.visit_id);
+    async deleteVisit() {
+      try {
+        VisitService.deleteVisit(this.visit_id)
+          .then(() => {
+            this.$router.push(`/patients/envelope/${this.id}`);
+          });
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 };
@@ -194,5 +384,10 @@ textarea {
 
 .nav-link:hover {
   color: black;
+}
+
+.header {
+  width: 2in;
+  font-weight: bold;
 }
 </style>

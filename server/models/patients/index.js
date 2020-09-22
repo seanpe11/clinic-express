@@ -2,12 +2,21 @@
 
 const mongoose = require('mongoose');
 
+const AddressSchema = new mongoose.Schema({
+    street: String,
+    city: String,
+    province: String,
+})
+
 const schema = new mongoose.Schema({
     name: String,
-    age: Number,
     sex: String,
-    address: String,
-    occupation: String,
+    address: [AddressSchema],
+    contact_number: String,
+    date_of_birth: Date,
+    marital_status: String,
+    height: String,
+    previous_names: [String],
     createdAt: {
         type: Date,
         default: Date.now()
@@ -15,7 +24,7 @@ const schema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now()
-    }
+    },
 })
 
 const model = mongoose.model('patients', schema);

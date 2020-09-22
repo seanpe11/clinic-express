@@ -2,7 +2,7 @@ require('dotenv').config();
 
 module.exports = {
     development: {
-        host: process.env.TEST_DB
+        host: "mongodb://localhost:27017/clinic_dms"
     },
     test: {
         host: process.env.TEST_DB

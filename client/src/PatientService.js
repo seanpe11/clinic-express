@@ -31,6 +31,19 @@ class PatientService {
     return axios.post(url, body);
   }
 
+  static updatePatient(id, body) {
+    return new Promise((resolve, reject) => {
+      try {
+        axios.put(`${url}/${id}`, body)
+          .then(() => {
+            resolve();
+          });
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
   static fetchPatientProfile(id) {
     return new Promise((resolve, reject) => {
       try {
@@ -51,6 +64,19 @@ class PatientService {
           });
       } catch (err) {
         console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  static deletePatient(id) {
+    return new Promise((resolve, reject) => {
+      try {
+        axios.delete(`${url}/${id}`)
+          .then(() => {
+            resolve();
+          });
+      } catch (err) {
         reject(err);
       }
     });

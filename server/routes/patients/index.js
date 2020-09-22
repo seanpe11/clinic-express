@@ -26,8 +26,11 @@ router.post('/', async function (req, res) {
 
 router.put('/:id', async function (req, res) {
 
+    console.log(req.body);
+
     const { error } = updateValidateBody(req.body);
     if(error) return res.status(400).json(error.details[0].message);
+
 
     try {
         await Patient.updateOne({ _id: req.params.id }, req.body);        
@@ -113,6 +116,33 @@ router.get('/:id', async function (req, res) {
     } catch (err) {
         console.log(err);
         return res.status(500).json('Internal Server Error');
+    }
+});
+
+router.delete('/:id', async function (req, res) {
+    try {
+        async.parallel({
+            patient: function (callback) {
+                Patient.findByIdAndDelete(req.params.id)
+                    .then((result) => { callback(null, result) })
+                    .catch(err => callback(err));
+            },
+            visits: function (callback) {
+                Visits.deleteMany({ patient: req.params.id })
+                    .then((result) => { callback(null, result)})
+                    .catch(err => callback(err));
+            }
+        }, async function (err, result) {
+            if(err) {
+                console.log(err);
+                return res.status(500);
+            }
+
+            res.json(true);
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json('Internal Server Error');
     }
 });
 

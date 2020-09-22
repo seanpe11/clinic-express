@@ -1,7 +1,7 @@
 <template>
   <div class="patient">
     <div class="row">
-      <Sidebar :name='name' :links='links'/>
+      <Sidebar :name='patient.name' :links='links'/>
       <div id="content" class='col-10'>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -9,60 +9,152 @@
         </ol>
         <!-- Basic Information -->
         <div class="rectangle mb-25" id="patientInfo">
-          Basic Information
-          <div class="container mt-5">
-            <div class="row">
+          <h3>
+            Basic Information
+          </h3>
+          <div class="mt-3">
+            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
+              <tr><td class='header'>Name</td><td>{{ patient.name }}</td></tr>
+              <tr><td class='header'>Sex</td><td>{{ patient.sex }}</td></tr>
+              <tr><td class='header'>Age</td><td>{{  }}</td></tr> <!-- calculate from date of birth -->
+              <tr v-for="(add, index) in patient.address" :key='add._id'>
+                <td class='header'>Address {{index+1}}</td><td v-if='add.street !== "Default"'>{{ `${add.street}, ${add.city}, ${add.province}`}}</td>
+              </tr>
+              <tr><td class='header'>Date of Birth</td><td>{{ patient.date_of_birth }}</td></tr>
+              <tr><td class='header'>Contact Number</td><td>{{ patient.contact_number }}</td></tr>
+              <tr><td class='header'>Marital Status</td><td>{{ patient.marital_status }}</td></tr>
+              <tr><td class='header'>Height</td><td>{{ patient.height }}</td></tr>
+              <tr v-if="patient.previous_names && patient.previous_names.length"><td class='header'>Previous Names</td><td>{{ patient.previous_names }}</td></tr>
+            </table>
+            <!-- <div class="row">
               <div class="col-lg-6">
-                <h3>Name: {{ name }} </h3>
+                <h3>Name: {{ patient.name }} </h3>
               </div>
               <div class="col-lg-3">
-                <h3>Sex: {{ sex }}</h3>
+                <h3>Sex: {{ patient.sex }}</h3>
               </div>
               <div class="col-lg-3">
-                <h3>Age: {{ age }}</h3>
+                <h3>Age: {{ patient.age }}</h3>
               </div>
             </div>
             <div class="row mt-4 mb-5">
               <div class="col-lg-6">
-                <h3>Address: {{ address }} </h3>
+                <h3>Address: {{ patient.address }} </h3>
               </div>
               <div class="col-lg-6">
-                <h3>Occupation: {{ occupation }} </h3>
+                <h3>Occupation: {{ patient.occupation }} </h3>
               </div>
-            </div>
+            </div> -->
           </div>
-          <button class='mb-25 default'><div class='add-btn' v-on:click='edit' type="button">Edit Patient Info</div></button>
+          <button class='mt-3'><div class='add-btn' v-on:click='edit'>Edit Patient Info</div></button>
         </div>
         <!-- Edit patient form -->
         <div class="rectangle mb-25" id="editPatientInfo">
-          Editing Information
-          <div class="container mt-5">
-            <div class="row">
+          <h3>
+            Editing Information
+          </h3>
+          <div class="mt-3">
+            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
+              <tr><td class='header'>Name</td><td><input type="text" v-model="patient.name"/></td></tr>
+              <tr>
+                <td class='header'>Sex</td>
+                <td>
+                  <div class="form-group">
+                    <select id="inputState" class="form-control" style='width: auto;' v-model="patient.sex">
+                      <option selected>Male</option>
+                      <option>Female</option>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr v-for="(add, index) in patient.address" :key='add._id'>
+                <td colspan="2">
+                  <strong><u>Address {{index+1}}</u></strong>
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <label for="patientStreet">Street:</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="patientStreet"
+                        v-model="add.street"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <label for="patientCity">City:</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="patientCity"
+                        v-model="add.city"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <label for="patientProvince">Province:</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="patientProvince"
+                        v-model="add.province"
+                        required
+                      />
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr><td class='header'>Date of Birth</td><td><input type="date" v-model="patient.date_of_birth"/></td></tr>
+              <tr><td class='header'>Contact Number</td><td><input type="text" v-model="patient.contact_number"/></td></tr>
+              <tr><td class='header'>Marital Status</td><td><input type="text" v-model="patient.marital_status"/></td></tr>
+              <tr><td class='header'>Height</td><td><input type="text" v-model="patient.height"/></td></tr>
+              <!-- Just add another row, change the header and the v-model for new data -->
+            </table>
+            <!-- <div class="row">
               <div class="col-lg-6">
-                <h3>Name: {{ name }} </h3>
+                <div class="form-group">
+                  <label for="name">Name: </label>
+                  <input type="text" v-model="patient.name"/>
+                </div>
               </div>
               <div class="col-lg-3">
-                <h3>Sex: {{ sex }}</h3>
+                <div class="form-group">
+                  <label for="name">Sex: </label>
+                  <input type="text" v-model="patient.sex"/>
+                </div>
               </div>
               <div class="col-lg-3">
-                <h3>Age: {{ age }}</h3>
+                <div class="form-group">
+                  <label for="name">Age: </label>
+                  <input type="text" v-model="patient.age"/>
+                </div>
               </div>
             </div>
             <div class="row mt-4 mb-5">
               <div class="col-lg-6">
-                <h3>Address: {{ address }} </h3>
+                <div class="form-group">
+                  <label for="name">Address: </label>
+                  <input type="text" v-model="patient.address"/>
+                </div>
               </div>
               <div class="col-lg-6">
-                <h3>Occupation: {{ occupation }} </h3>
+                <div class="form-group">
+                  <label for="name">Occupation: </label>
+                  <input type="text" v-model="patient.occupation"/>
+                </div>
               </div>
-            </div>
+            </div> -->
           </div>
-          <button class='mb-25 default'><div class='add-btn' type="button" @click="cancel">Cancel</div></button>
-          <button class='mb-25 default'><div class='add-btn' type="button" @click="saveInfo">Save</div></button>
+          <div class="mt-3">
+            <button class='btn btn-warning' @click="cancel">Cancel</button>
+            <button class='btn btn-success ml-3' @click="saveInfo">Save</button>
+            <button class='btn btn-danger ml-3' @click="deletePatient">Delete Patient</button>
+          </div>
         </div>
-        <button class='mb-25 default'><div class='add-btn' type="button" @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
+        <input type="text" class="search" v-model="search" placeholder="Search visit dates" v-on:keyup.enter="searchQuery" />
+        <button class='mb-25 default'><div class='add-btn' @click="saveVisit" data-toggle="modal" data-target="#addVisitModal">+ Add New Visit</div></button>
         <!-- FOR LOOP FOR VISITS -->
-        <div v-for="visit in visits" :key='visit._id'>
+        <div v-for="visit in searchQuery()" :key='visit._id'>
           <!-- TODO: change :key to the visitID -->
           <router-link :to="{ path: visit.link }">
             <div class="rectangle mb-25">{{visit.date}}</div>
@@ -140,14 +232,17 @@ export default {
     Sidebar,
   },
   data: () => ({
-    name: {
-      name: '',
-    },
     id: '',
-    age: '',
-    sex: '',
-    address: '',
-    occupation: '',
+    // name: '',
+    // sex: '',
+    // street: '',
+    // city: '',
+    // province: '',
+    // date_of_birth: '',
+    // contact_number: '',
+    // marital_status: '',
+    // height: '',
+    patient: {},
     links: [
       {
         name: 'Summary Statistics',
@@ -161,6 +256,7 @@ export default {
     assessment: '',
     plan: '',
     errorMessage: '',
+    search: '',
   }),
   async created() {
     this.id = this.$route.params.id;
@@ -170,6 +266,16 @@ export default {
     $('#editPatientInfo').hide();
   },
   methods: {
+    searchQuery() {
+      try {
+        if (this.search) {
+          return this.visits.filter((item) => this.search.toLowerCase().split(' ').every((v) => item.date.toLowerCase().includes(v)));
+        }
+      } catch (err) {
+        alert('error');
+      }
+      return this.visits;
+    },
     async saveVisit() {
       this.errorMessage = '';
       const newVisit = {
@@ -177,6 +283,10 @@ export default {
         object: '',
         assessment: '',
         plan: '',
+        weight: '',
+        blood_pressure: '',
+        heart_rate: '',
+        painVisual: '',
         patient: this.id,
       };
       VisitService.createVisit(newVisit).then(() => {
@@ -192,17 +302,49 @@ export default {
       $('#editPatientInfo').hide();
       this.loadData();
     },
-    saveInfo() {
+    async saveInfo() {
       // to do
+      try {
+        $('#patientInfo').show();
+        $('#editPatientInfo').hide();
+        // const address = {
+        //   street: this.street,
+        //   city: this.city,
+        //   province: this.province,
+        // };
+        // const toSend = {
+        //   name: this.name,
+        //   sex: this.sex,
+        //   address,
+        //   date_of_birth: this.date_of_birth,
+        //   contact_number: this.contact_number,
+        //   marital_status: this.marital_status,
+        //   height: this.height,
+        // };
+        PatientService.updatePatient(this.id, this.patient)
+          .then(() => {
+            this.loadData();
+          });
+      } catch (err) {
+        console.log('error');
+        this.loadData();
+      }
+    },
+    async deletePatient() {
+      try {
+        PatientService.deletePatient(this.id)
+          .then(() => {
+            this.$router.push('/');
+          });
+      } catch (err) {
+        console.log('error');
+        this.loadData();
+      }
     },
     async loadData() {
       try {
         const data = await PatientService.fetchPatientProfile(this.id);
-        this.name = data.name;
-        this.age = data.age;
-        this.sex = data.sex;
-        this.address = (data.address) ? data.address : 'N/A';
-        this.occupation = (data.occupation) ? data.occupation : 'N/A';
+        this.patient = data;
         this.visits = data.visits.reverse();
         $('#objectCard').hide();
         $('#assessmentCard').hide();
@@ -247,6 +389,11 @@ button.default {
   background: transparent;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.header {
+  width: 2in;
+  font-weight: bold;
 }
 
 #content {

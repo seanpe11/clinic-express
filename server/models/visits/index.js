@@ -7,6 +7,15 @@ const schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         refs: 'patients'
     },
+    weight: {
+        type: String
+    },
+    heart_rate: {
+        type: String
+    },
+    blood_pressure: {
+        type: String
+    },
     subject: {
         type: String
     },
@@ -19,14 +28,17 @@ const schema = new mongoose.Schema({
     plan: {
         type: String
     },
+    painVisual: {
+      type: String
+    },
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     },
     updatedAt: {
         type: Date,
-        default: Date.now()
-    }
+        default: Date.now
+    },
 });
 
 const model = mongoose.model('visits', schema);

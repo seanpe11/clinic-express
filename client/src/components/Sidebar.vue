@@ -1,8 +1,8 @@
 <template>
-    <div id="sidebar" class='col-2'>
-        <div id="nav" class='position-fixed'>
-            <h4>Jamalul Clinic</h4>
-
+    <div id="sidebar" class='col-2 d-none d-md-block'>
+        <div id="nav" class='position-fixed' style='width: inherit;'>
+            <h4>Jamalul Surgical and Medical Clinic</h4>
+            <button class="btn" @click="logout()">Logout</button>
             <div v-if="name != 'null'" id="name">
                 <span>Patient Name</span>
                 <h3>{{ name }}</h3>
@@ -25,8 +25,16 @@
 export default {
   name: 'Sidebar',
   props: {
-    name: Object,
+    name: String,
     links: Array,
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('type');
+      localStorage.removeItem('fullname');
+      document.location.replace('/login');
+    },
   },
 };
 </script>
@@ -52,5 +60,9 @@ footer {
 
 #links {
     margin-top: .5in;
+}
+
+.btn {
+    padding-left: 0px;
 }
 </style>
