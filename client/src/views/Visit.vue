@@ -47,7 +47,7 @@
               </div>
             </div> -->
           </div>
-          <button class='mt-3'><div class='add-btn' v-on:click='editVisit'>Edit Patient Infos</div></button>
+          <button class='mt-3'><div class='add-btn' v-on:click='editVisit'>Edit Visit Info</div></button>
         </div>
         <!-- Edit patient form -->
         <div class="rectangle mb-25"  id="editVisitInfo">
