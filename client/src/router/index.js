@@ -84,19 +84,19 @@ router.beforeEach((to, from, next) => {
       });
     } else {
       const user = localStorage.getItem('isAdmin');
-      console.log (user);
+      console.log(user);
       if (to.matched.some((record) => record.meta.isAdmin)) {
         if (user) { // true = is an admin
-          console.log ("one");
+          console.log('one');
           // next({ path: '/admin',
           // params: { nextUrl: to.fullPath }, });
           next();
         } else {
-          console.log("two");
+          console.log('two');
           next({ path: '/' });
         }
       } else {
-        console.log("three");
+        console.log('three');
         next();
       }
     }

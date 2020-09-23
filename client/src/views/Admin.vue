@@ -79,7 +79,7 @@
                         <label for="patientHeight">Type of Account:</label>
                         <div class="form-group">
                         <select id="inputState" class="form-control" v-model="isAdmin">
-                          <option selected>Doctor</option>
+                          <option selected>User</option>
                           <option>Admin</option>
                         </select>
                       </div>
@@ -96,7 +96,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="mb-25" data-dismiss="modal">Close</button>
-                <button type="button" class="mb-25" @click="savePatient">Save</button>
+                <button type="button" class="mb-25" @click='savePatient'>Save</button>
               </div>
             </div>
           </div>
@@ -106,15 +106,13 @@
           <div v-for="patient in searchQuery()" :key="patient.name">
           <!-- TODO: FIX FONT-->
             <div class="rectangle patient">
-           <div data-toggle="modal"
+            <div data-toggle="modal"
             data-target="#infoModal"
             data-whatever="@mdo">
               <div class="name">{{patient.name}}</div>
             </div>
             </div>
         </div>
-
-        
 
         <!-- END LOOP -->
         <!-- Modal -->
@@ -210,35 +208,35 @@ export default {
     }
   },
   methods: {
-    async savePatient() {
-      this.errorMessage = '';
-      // const address = {
-      //   street: this.street,
-      //   city: this.city,
-      //   province: this.province,
-      // };
-      // const secAddress = {
-      //   street: 'Default',
-      //   city: 'Default',
-      //   province: 'Default',
-      // };
-      const newAccount = {
-        first_name: this.first_name,
-        last_name: this.last_name,
-        // address: [address, secAddress],
-        username: this.username,
-        password: this.password,
-        isAdmin: this.isAdmin,
-      };
-      console.log(newPatient);
-      PatientService.createPatient(newPatient).then(() => {
-        document.location.reload();
-      }).catch((err) => {
-        if (err.response.status) {
-          this.errorMessage = err.response.data;
-        }
-      });
-    },
+    // async savePatient() {
+    //   this.errorMessage = '';
+    //   // const address = {
+    //   //   street: this.street,
+    //   //   city: this.city,
+    //   //   province: this.province,
+    //   // };
+    //   // const secAddress = {
+    //   //   street: 'Default',
+    //   //   city: 'Default',
+    //   //   province: 'Default',
+    //   // };
+    //   const newAccount = {
+    //     first_name: this.first_name,
+    //     last_name: this.last_name,
+    //     // address: [address, secAddress],
+    //     username: this.username,
+    //     password: this.password,
+    //     isAdmin: this.isAdmin,
+    //   };
+    //   console.log(newAccount);
+    //   PatientService.createPatient(newPatient).then(() => {
+    //     document.location.reload();
+    //   }).catch((err) => {
+    //     if (err.response.status) {
+    //       this.errorMessage = err.response.data;
+    //     }
+    //   });
+    // },
     searchQuery() {
       try {
         if (this.search) {

@@ -182,7 +182,7 @@
         </div>
         <div class="rectangle mb-25">
           <div class="row mb-4">
-            <h3 class="col-6 m-0">{{ visit_date }}</h3>
+            <h3 class="col-6 m-0">Pain Visualization Tool</h3>
             <div class="col-6">
               <div class="btn btn-success float-right" id="saveCanvasBtn">Save</div>
             </div>
