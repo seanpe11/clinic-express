@@ -51,7 +51,10 @@ export default {
 
       LoginService.login(body)
         .then(() => {
-          document.location.replace('/');
+          const user = localStorage.getItem('isAdmin');
+          console.log('user is: ', user);
+          if (user === true) document.location.replace('/admin');
+          else document.location.replace('/');
         })
         .catch((err) => {
           if (err.response) {

@@ -148,7 +148,7 @@
                   <div class="form-group" v-if="errorMessage">
                     <div class="row text-center">
                       <h4 style="color: red;">{{ errorMessage }}</h4>
-                    </div> 
+                    </div>
                   </div>
                 </form>
 
@@ -184,7 +184,7 @@
                   <div class="form-group" v-if="errorMessage">
                     <div class="row text-center">
                       <h4 style="color: red;">{{ errorMessage }}</h4>
-                    </div> 
+                    </div>
                   </div>
                 </form>
 
@@ -239,13 +239,13 @@ export default {
     try {
       this.patients = await PatientService.getPatients(this.search);
     } catch (err) {
-      alert('error');
+      console.log(err);
     }
   },
   methods: {
     async savePatient() {
       this.errorMessage = '';
-      const newAccount = {
+      const newPatient = {
         first_name: this.first_name,
         last_name: this.last_name,
         username: this.username,
@@ -267,7 +267,7 @@ export default {
           return this.patients.filter((item) => this.search.toLowerCase().split(' ').every((v) => item.name.toLowerCase().includes(v)));
         }
       } catch (err) {
-        alert('error');
+        console.log(err);
       }
       return this.patients;
     },
