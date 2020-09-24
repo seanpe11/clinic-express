@@ -2,82 +2,99 @@
   <div class="home">
     <div class="row">
       <Sidebar name="null" :links="links" />
-      <div id="content" class="col-10">
+      <div id="content" class="col-12 col-md-10 p-0 p-md-5">
+        <nav class="navbar navbar-expand-lg navbar-light m-3 pl-3 d-block d-md-none">
+          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                  aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-      <!-- List start-->
+          <a class="navbar-brand ml-4"><strong>Edit Billings</strong></a>
+
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/admin">System Accounts</a>
+                <a class="nav-link" href="" v-on:click="logout()">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- List start-->
         <div class="card">
-        <h3 class="card-header text-center font-weight-bold text-uppercase py-4">List of Services</h3>
-        <div class="card-body">
-            <div id="table" class="table-editable">
-            <button type="button" class="btn btn-link table-add float-right mb-3 mr-2">+ Add Row</button>
-            <table class="table table-bordered table-responsive-md table-striped text-center">
-                <thead>
-                <tr>
-                    <th class="text-center">Service</th>
-                    <th class="text-center">Price</th>
-                    <th class="text-center">Note</th>
-                    <th class="text-center">Custom</th>
-                </tr>
-                </thead>
+          <h3 class="card-header text-center font-weight-bold text-uppercase py-4">List of Services</h3>
+          <div class="card-body">
+              <div id="table" class="table-editable">
+              <button type="button" class="btn btn-link table-add float-right mb-3 mr-2">+ Add Row</button>
+              <table class="table table-bordered table-responsive-md table-striped text-center">
+                  <thead>
+                  <tr>
+                      <th class="text-center">Service</th>
+                      <th class="text-center">Price</th>
+                      <th class="text-center">Note</th>
+                      <th class="text-center">Custom</th>
+                  </tr>
+                  </thead>
 
-                <!--START LOOP FOR ROWS-->
-                <tbody>
-                <tr>
-                    <td class="pt-3-half">Check up with Dra. Jamalul</td>
-                    <td class="pt-3-half">300</td>
-                    <td class="pt-3-half"></td>
-                    <td>
-                    <button type="button" class="btn btn-success btn-rounded btn-sm" @click="editRow">Edit</button>
-                    <div class="divider"/>
-                    <button type="button" class="btn btn-danger btn-rounded btn-sm" @click="deleteRow">Delete</button>
-                    </td>
-                <tr class="hide">
-                    <td class="pt-3-half">Check up with Dr. Jamalul</td>
-                    <td class="pt-3-half">500</td>
-                    <td class="pt-3-half"></td>
-                    <td>
-                    <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
-                    <div class="divider"/>
-                    <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
-                    </td>
-                </tr>
-                <tr class="hide">
-                    <td class="pt-3-half">Check up Dra Jamalul w/ ECG</td>
-                    <td class="pt-3-half">500</td>
-                    <td class="pt-3-half"></td>
-                    <td>
-                    <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
-                    <div class="divider"/>
-                    <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
-                    </td>
-                </tr>
-                <tr class="hide">
-                    <td class="pt-3-half">Wound Cleaning Dr. Jamalul</td>
-                    <td class="pt-3-half">500</td>
-                    <td class="pt-3-half"></td>
-                    <td>
-                    <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
-                    <div class="divider"/>
-                    <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
-                    </td>
-                </tr>
-                <tr class="hide">
-                    <td class="pt-3-half">Circumcision</td>
-                    <td class="pt-3-half">1500</td>
-                    <td class="pt-3-half"></td>
-                    <td>
-                    <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
-                    <div class="divider"/>
-                    <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
-                    </td>
-                </tr>
-                </tbody>
-                <!--END LOOP-->
-            </table>
-            </div>
-        </div>
-        </div>
-      <!-- List End-->
+                  <!--START LOOP FOR ROWS-->
+                  <tbody>
+                  <tr>
+                      <td class="pt-3-half">Check up with Dra. Jamalul</td>
+                      <td class="pt-3-half">300</td>
+                      <td class="pt-3-half"></td>
+                      <td>
+                      <button type="button" class="btn btn-success btn-rounded btn-sm" @click="editRow">Edit</button>
+                      <div class="divider"/>
+                      <button type="button" class="btn btn-danger btn-rounded btn-sm" @click="deleteRow">Delete</button>
+                      </td>
+                  <tr class="hide">
+                      <td class="pt-3-half">Check up with Dr. Jamalul</td>
+                      <td class="pt-3-half">500</td>
+                      <td class="pt-3-half"></td>
+                      <td>
+                      <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
+                      <div class="divider"/>
+                      <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
+                      </td>
+                  </tr>
+                  <tr class="hide">
+                      <td class="pt-3-half">Check up Dra Jamalul w/ ECG</td>
+                      <td class="pt-3-half">500</td>
+                      <td class="pt-3-half"></td>
+                      <td>
+                      <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
+                      <div class="divider"/>
+                      <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
+                      </td>
+                  </tr>
+                  <tr class="hide">
+                      <td class="pt-3-half">Wound Cleaning Dr. Jamalul</td>
+                      <td class="pt-3-half">500</td>
+                      <td class="pt-3-half"></td>
+                      <td>
+                      <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
+                      <div class="divider"/>
+                      <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
+                      </td>
+                  </tr>
+                  <tr class="hide">
+                      <td class="pt-3-half">Circumcision</td>
+                      <td class="pt-3-half">1500</td>
+                      <td class="pt-3-half"></td>
+                      <td>
+                      <button type="button" class="btn btn-success btn-rounded btn-sm">Edit</button>
+                      <div class="divider"/>
+                      <button type="button" class="btn btn-danger btn-rounded btn-sm">Delete</button>
+                      </td>
+                  </tr>
+                  </tbody>
+                  <!--END LOOP-->
+              </table>
+              </div>
+          </div>
+          </div>
+        <!-- List End-->
       </div>
     </div>
   </div>
@@ -104,6 +121,14 @@ export default {
       },
     ],
   }),
+  methods: {
+    logout() {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('type');
+      localStorage.removeItem('fullname');
+      document.location.replace('/login');
+    },
+  },
 };
 </script>
 

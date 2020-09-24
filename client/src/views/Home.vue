@@ -3,6 +3,23 @@
     <div class="row">
       <Sidebar name="null" :links="links" />
       <div id="content" class="col-md-10 col-12">
+        <nav class="navbar navbar-expand-lg navbar-light mb-3 d-block d-md-none">
+          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                  aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <a class="navbar-brand ml-4"><strong>Patient Envelopes</strong></a>
+
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/billings">View Billing Table</a>
+                <a class="nav-link" href="" v-on:click="logout()">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
         <!-- search field -->
         <input type="text" class="search" v-model="search" placeholder="Search patient envelopes" v-on:keyup.enter="searchQuery" />
 
@@ -26,7 +43,7 @@
           aria-labelledby="patientModalLabel"
           aria-hidden="true"
         >
-          <div class="modal-dialog" role="document">
+          <div class="modal-dialog modal-dialog-mobile" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="patientModalLabel">Add New Patient</h5>
@@ -159,11 +176,13 @@
           <!-- TODO: change :key to the patientID -->
           <router-link :to="{path: patient.link}" class="router-link">
             <div class="rectangle patient">
-              <div class="name">{{patient.name}}</div>
-              <div class="lastVisit">
-                Last Visit
-                <br />
-                {{patient.lastVisit}}
+              <div class="row">
+                <div class="name col-12 col-md-6">{{patient.name}}</div>
+                <div class="lastVisit d-none d-md-block col-md-6">
+                  Last Visit
+                  <br />
+                  {{patient.lastVisit}}
+                </div>
               </div>
             </div>
           </router-link>
@@ -201,8 +220,8 @@ export default {
     // replace this array to the results of a mongodb query
     links: [
       {
-        name: 'Summary Statistics',
-        dest: '/statistics',
+        name: 'Billings',
+        dest: '/billings',
       },
     ],
     patients: [],
@@ -255,11 +274,30 @@ export default {
       }
       return this.patients;
     },
+    logout() {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('type');
+      localStorage.removeItem('fullname');
+      document.location.replace('/login');
+    },
   },
 };
 </script>
 
 <style scoped>
+
+.modal-dialog-mobile {
+  margin: 0;
+  max-width: auto;
+}
+
+@media (min-width: 768px) {
+  .modal-dialog-mobile {
+    margin: 1.75rem auto;
+    max-width: 500px;
+  }
+}
+
 .router-link {
   text-decoration: none;
   color: black;
@@ -273,13 +311,12 @@ export default {
   box-shadow: none;
 }
 
-.patient > .name {
+.patient > .row > .name {
   font-size: 24px;
-  float: left;
   font-weight: bold;
 }
 
-.patient > .lastVisit {
+.patient > .row > .lastVisit {
   font-size: 12px;
   text-align: right;
   color: #737373;

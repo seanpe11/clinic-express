@@ -8,9 +8,7 @@ const User = require('../../models').users;
 const router = require('express').Router();
 
 router.post('/', async (req, res) => {
-  console.log(req.body);
   let user = await User.findOne({ username: req.body.username });
-  console.log(user);
   if(!user) return res.status(400).json('Invalid username');
 
   const validPassword = await bcrypt.compare(req.body.password, user.password);
@@ -24,8 +22,6 @@ router.post('/', async (req, res) => {
       last_name: user.last_name,
       isAdmin: user.isAdmin,
   }
-
-  console.log(responseObject);
 
   res.json(responseObject);
 });

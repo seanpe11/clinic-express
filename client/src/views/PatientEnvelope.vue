@@ -2,7 +2,24 @@
   <div class="patient">
     <div class="row">
       <Sidebar :name='patient.name' :links='links'/>
-      <div id="content" class='col-10'>
+      <div id="content" class='col-12 col-md-10'>
+        <nav class="navbar navbar-expand-lg navbar-light mb-3 d-block d-md-none">
+          <div class="row">
+            <button class="navbar-toggler navbar-toggler-right col-2" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="col-10 my-auto"><strong>{{patient.name}}</strong></a>
+          </div>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/billings">View Billing Table</a>
+                <a class="nav-link" href="" v-on:click="logout()">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item active" aria-current="page">Patient Envelope</li>
@@ -13,19 +30,44 @@
             Basic Information
           </h3>
           <div class="mt-3">
-            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
-              <tr><td class='header'>Name</td><td>{{ patient.name }}</td></tr>
-              <tr><td class='header'>Sex</td><td>{{ patient.sex }}</td></tr>
-              <tr><td class='header'>Age</td><td>{{  }}</td></tr> <!-- calculate from date of birth -->
-              <tr v-for="(add, index) in patient.address" :key='add._id'>
-                <td class='header'>Address {{index+1}}</td><td v-if='add.street !== "Default"'>{{ `${add.street}, ${add.city}, ${add.province}`}}</td>
-              </tr>
-              <tr><td class='header'>Date of Birth</td><td>{{ patient.date_of_birth }}</td></tr>
-              <tr><td class='header'>Contact Number</td><td>{{ patient.contact_number }}</td></tr>
-              <tr><td class='header'>Marital Status</td><td>{{ patient.marital_status }}</td></tr>
-              <tr><td class='header'>Height</td><td>{{ patient.height }}</td></tr>
-              <tr v-if="patient.previous_names && patient.previous_names.length"><td class='header'>Previous Names</td><td>{{ patient.previous_names }}</td></tr>
-            </table>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Name</strong></div>
+              <div class="col-12 col-md-9">{{patient.name}}</div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Sex</strong></div>
+              <div class="col-12 col-md-9">{{patient.sex}}</div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Age</strong></div>
+              <div class="col-12 col-md-9">{{computeAge(patient.date_of_birth)}}</div>
+            </div>
+            <div class='row mb-2' v-for='(address, index) in patient.address' :key='address._id'>
+              <div class="col-12 col-md-3"><strong>Address {{index+1}}</strong></div>
+              <div class="col-12 col-md-9">{{address.street}}, {{address.city}}, {{address.province}}</div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Date of Birth</strong></div>
+              <div class="col-12 col-md-9">
+                {{getStringMonth(new Date(patient.date_of_birth).getMonth())}} {{new Date(patient.date_of_birth).getDate()}}, {{new Date(patient.date_of_birth).getFullYear()}}
+              </div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Contact Number</strong></div>
+              <div class="col-12 col-md-9">{{patient.contact_number}}</div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Marital Status</strong></div>
+              <div class="col-12 col-md-9">{{patient.marital_status}}</div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Height</strong></div>
+              <div class="col-12 col-md-9">{{patient.height}}</div>
+            </div>
+            <div class='row mb-2' v-if='patient.previous_name'>
+              <div class="col-12 col-md-3"><strong>Previous Names</strong></div>
+              <div class="col-12 col-md-9">{{patient.previous_name}}</div>
+            </div>
             <!-- <div class="row">
               <div class="col-lg-6">
                 <h3>Name: {{ patient.name }} </h3>
@@ -54,101 +96,77 @@
             Editing Information
           </h3>
           <div class="mt-3">
-            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
-              <tr><td class='header'>Name</td><td><input type="text" v-model="patient.name"/></td></tr>
-              <tr>
-                <td class='header'>Sex</td>
-                <td>
-                  <div class="form-group">
-                    <select id="inputState" class="form-control" style='width: auto;' v-model="patient.sex">
-                      <option selected>Male</option>
-                      <option>Female</option>
-                    </select>
-                  </div>
-                </td>
-              </tr>
-              <tr v-for="(add, index) in patient.address" :key='add._id'>
-                <td colspan="2">
-                  <strong><u>Address {{index+1}}</u></strong>
-                  <div class="row">
-                    <div class="col-12 col-md-6">
-                      <label for="patientStreet">Street:</label>
-                      <input
-                        class="form-control"
-                        type="text"
-                        name="patientStreet"
-                        v-model="add.street"
-                        required
-                      />
-                    </div>
-                    <div class="col-12 col-md-3">
-                      <label for="patientCity">City:</label>
-                      <input
-                        class="form-control"
-                        type="text"
-                        name="patientCity"
-                        v-model="add.city"
-                        required
-                      />
-                    </div>
-                    <div class="col-12 col-md-3">
-                      <label for="patientProvince">Province:</label>
-                      <input
-                        class="form-control"
-                        type="text"
-                        name="patientProvince"
-                        v-model="add.province"
-                        required
-                      />
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr><td class='header'>Date of Birth</td><td><input type="date" v-model="patient.date_of_birth"/></td></tr>
-              <tr><td class='header'>Contact Number</td><td><input type="text" v-model="patient.contact_number"/></td></tr>
-              <tr><td class='header'>Marital Status</td><td><input type="text" v-model="patient.marital_status"/></td></tr>
-              <tr><td class='header'>Height</td><td><input type="text" v-model="patient.height"/></td></tr>
-              <!-- Just add another row, change the header and the v-model for new data -->
-            </table>
-            <!-- <div class="row">
-              <div class="col-lg-6">
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Name</strong></div>
+              <div class="col-12 col-md-9"><input type="text" v-model="patient.name"/></div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Sex</strong></div>
+              <div class="col-12 col-md-9">
                 <div class="form-group">
-                  <label for="name">Name: </label>
-                  <input type="text" v-model="patient.name"/>
-                </div>
-              </div>
-              <div class="col-lg-3">
-                <div class="form-group">
-                  <label for="name">Sex: </label>
-                  <input type="text" v-model="patient.sex"/>
-                </div>
-              </div>
-              <div class="col-lg-3">
-                <div class="form-group">
-                  <label for="name">Age: </label>
-                  <input type="text" v-model="patient.age"/>
+                  <select id="inputState" class="form-control" style='width: auto;' v-model="patient.sex">
+                    <option selected>Male</option>
+                    <option>Female</option>
+                  </select>
                 </div>
               </div>
             </div>
-            <div class="row mt-4 mb-5">
-              <div class="col-lg-6">
-                <div class="form-group">
-                  <label for="name">Address: </label>
-                  <input type="text" v-model="patient.address"/>
+            <div class='row mb-2' v-for="(add, index) in patient.address" :key='add._id'>
+              <div class="col-12 col-md-3"><strong>Address {{index+1}}</strong></div>
+              <div class="col-12 col-md-9">
+                <div class="col-12 col-md-6">
+                  <label for="patientStreet">Street:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="patientStreet"
+                    v-model="add.street"
+                    required
+                  />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="patientCity">City:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="patientCity"
+                    v-model="add.city"
+                    required
+                  />
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="patientProvince">Province:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="patientProvince"
+                    v-model="add.province"
+                    required
+                  />
                 </div>
               </div>
-              <div class="col-lg-6">
-                <div class="form-group">
-                  <label for="name">Occupation: </label>
-                  <input type="text" v-model="patient.occupation"/>
-                </div>
-              </div>
-            </div> -->
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Date of Birth</strong></div>
+              <div class="col-12 col-md-9"><input type="date" v-model="patient.date_of_birth"/></div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Contact Number</strong></div>
+              <div class="col-12 col-md-9"><input type="text" v-model="patient.contact_number"/></div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Marital Status</strong></div>
+              <div class="col-12 col-md-9"><input type="text" v-model="patient.marital_status"/></div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Height</strong></div>
+              <div class="col-12 col-md-9"><input type="text" v-model="patient.height"/></div>
+            </div>
           </div>
           <div class="mt-3">
             <button class='btn btn-warning' @click="cancel">Cancel</button>
             <button class='btn btn-success ml-3' @click="saveInfo">Save</button>
-            <button class='btn btn-danger ml-3' @click="deletePatient">Delete Patient</button>
+            <button class='btn btn-danger ml-md-3 mt-3 mt-md-0' @click="deletePatient">Delete Patient</button>
           </div>
         </div>
         <input type="text" class="search" v-model="search" placeholder="Search visit dates" v-on:keyup.enter="searchQuery" />
@@ -245,8 +263,8 @@ export default {
     patient: {},
     links: [
       {
-        name: 'Summary Statistics',
-        dest: '/statistics',
+        name: 'Billings',
+        dest: '/billings',
       },
     ],
     visits: [],
@@ -266,6 +284,17 @@ export default {
     $('#editPatientInfo').hide();
   },
   methods: {
+    computeAge(dateOfBirth) {
+      const today = new Date();
+      const birthDate = new Date(dateOfBirth);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age -= 1;
+      }
+
+      return age;
+    },
     searchQuery() {
       try {
         if (this.search) {
@@ -353,6 +382,16 @@ export default {
         console.log('error');
       }
     },
+    getStringMonth(index) {
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      return months[index];
+    },
+    logout() {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('type');
+      localStorage.removeItem('fullname');
+      document.location.replace('/login');
+    },
   },
   watch: {
     activeBtn() {
@@ -394,6 +433,7 @@ button.default {
 .header {
   width: 2in;
   font-weight: bold;
+  width: 100%;
 }
 
 #content {

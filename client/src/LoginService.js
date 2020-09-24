@@ -15,7 +15,7 @@ class LoginService {
           //     link: `/patients/envelope/${patient._id}`,
           //   })),
           // );
-          console.log(data);
+          // console.log(data);
           localStorage.setItem('jwt', data.token);
           localStorage.setItem('isAdmin', data.isAdmin);
           localStorage.setItem('fullname', `${data.first_name} ${data.last_name}`);

@@ -2,7 +2,24 @@
   <div class="home">
     <div class="row">
       <Sidebar name="null" :links="links" />
-      <div id="content" class="col-10">
+      <div id="content" class="col-12 col-md-10">
+        <nav class="navbar navbar-expand-lg navbar-light mb-3 d-block d-md-none">
+          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                  aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <a class="navbar-brand ml-4"><strong>System Accounts</strong></a>
+
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/billing">Edit Billings</a>
+                <a class="nav-link" href="" v-on:click="logout()">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
         <!-- search field -->
         <input type="text" class="search" v-model="search" placeholder="Search accounts" v-on:keyup.enter="searchQuery" />
 
@@ -270,6 +287,12 @@ export default {
         console.log(err);
       }
       return this.patients;
+    },
+    logout() {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('type');
+      localStorage.removeItem('fullname');
+      document.location.replace('/login');
     },
   },
 };

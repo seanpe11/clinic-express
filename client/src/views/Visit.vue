@@ -1,8 +1,25 @@
 <template>
   <div class="visit">
     <div class="row">
-      <Sidebar name="null" :links='links'/>
-      <div id="content" class='col-10'>
+      <Sidebar :name='patient.name' :links='links'/>
+      <div id="content" class='col-12 col-md-10'>
+        <nav class="navbar navbar-expand-lg navbar-light mb-3 d-block d-md-none">
+          <div class="row">
+            <button class="navbar-toggler navbar-toggler-right col-2" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="col-10 my-auto"><strong>{{patient.name}}</strong></a>
+          </div>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/billings">View Billing Table</a>
+                <a class="nav-link" href="" v-on:click="logout()">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item" aria-current="page">
@@ -10,10 +27,10 @@
           </li>
           <li class="breadcrumb-item active" aria-current="page">Visit Record</li>
         </ol>
-        <div class="rectangle mb-25 d-flex">
-          <h3 class="col-6 m-0">{{ visit_date }}</h3>
-          <div class="col-6">
-            <div class="btn btn-danger float-right" @click="deleteVisit">Delete Visit</div>
+        <div class="rectangle mb-25 d-md-flex">
+          <h3 class="col-12 col-md-6 m-0">{{ visit_date }}</h3>
+          <div class="col-12 col-md-6">
+            <div class="btn btn-danger mt-3 mt-md-0 float-md-right" @click="deleteVisit">Delete Visit</div>
           </div>
         </div>
         <div class="rectangle mb-25" id='visitInfo'>
@@ -21,31 +38,18 @@
             Visit Basic Information
           </h3>
           <div class="mt-3">
-            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
-              <tr><td class='header'>Weight</td><td>{{visitInfo.weight}}</td></tr>
-              <tr><td class='header'>Heart Rate</td><td>{{visitInfo.heart_rate}}</td></tr>
-              <tr><td class='header'>Blood Pressure</td><td>{{visitInfo.blood_pressure}}</td></tr>
-              <!-- Just add another row, change the header and the patient.X for new data-->
-            </table>
-            <!-- <div class="row">
-              <div class="col-lg-6">
-                <h3>Name: {{ patient.name }} </h3>
-              </div>
-              <div class="col-lg-3">
-                <h3>Sex: {{ patient.sex }}</h3>
-              </div>
-              <div class="col-lg-3">
-                <h3>Age: {{ patient.age }}</h3>
-              </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Weight</strong></div>
+              <div class="col-12 col-md-9">{{visitInfo.weight}}</div>
             </div>
-            <div class="row mt-4 mb-5">
-              <div class="col-lg-6">
-                <h3>Address: {{ patient.address }} </h3>
-              </div>
-              <div class="col-lg-6">
-                <h3>Occupation: {{ patient.occupation }} </h3>
-              </div>
-            </div> -->
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Heart Rate</strong></div>
+              <div class="col-12 col-md-9">{{visitInfo.heart_rate}}</div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Blood Pressure</strong></div>
+              <div class="col-12 col-md-9">{{visitInfo.blood_pressure}}</div>
+            </div>
           </div>
           <button class='mt-3'><div class='add-btn' v-on:click='editVisit'>Edit Visit Info</div></button>
         </div>
@@ -55,12 +59,18 @@
             Editing Visit Information
           </h3>
           <div class="mt-3">
-            <table style='width: 100%; border-collapse:separate; border-spacing: 0 10px;'>
-              <tr><td class='header'>Weight</td><td><input type="text" v-model="visitInfo.weight"/></td></tr>
-              <tr><td class='header'>Heart Rate</td><td><input type="text" v-model="visitInfo.heart_rate"/></td></tr>
-              <tr><td class='header'>Blood Pressure</td><td><input type="text" v-model="visitInfo.blood_pressure" /></td></tr>
-              <!-- Just add another row, change the header and the v-model for new data -->
-            </table>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Weight</strong></div>
+              <div class="col-12 col-md-9"><input type="text" v-model="visitInfo.weight"/></div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Heart Rate</strong></div>
+              <div class="col-12 col-md-9"><input type="text" v-model="visitInfo.heart_rate"/></div>
+            </div>
+            <div class='row mb-2'>
+              <div class="col-12 col-md-3"><strong>Blood Pressure</strong></div>
+              <div class="col-12 col-md-9"><input type="text" v-model="visitInfo.blood_pressure"/></div>
+            </div>
             <!-- <div class="row">
               <div class="col-lg-6">
                 <div class="form-group">
@@ -103,7 +113,20 @@
         </div>
         <div class="rectangle mb-25">
           <h2 class='mb-25'>SOAP File</h2>
-          <ul class="nav nav-tabs mb-25" id="myTab" role="tablist">
+          <div class="nav dropdown d-flex d-md-none mb-3">
+            <button class="btn btn-secondary dropdown-toggle"
+                    type="button" id="dropdownMenu1" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+              Select SOAP
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+              <a class="dropdown-item" href="#subjective" data-toggle="tab">Subjective</a>
+              <a class="dropdown-item" href="#objective" data-toggle="tab">Objective</a>
+              <a class="dropdown-item" href="#assessment" data-toggle="tab">Assessment</a>
+              <a class="dropdown-item" href="#plan" data-toggle="tab">Plan</a>
+            </div>
+          </div>
+          <ul class="nav nav-tabs mb-25 d-none d-md-flex" id="myTab" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" id="home-tab" data-toggle="tab"
               href="#subjective" role="tab" aria-controls="home" aria-selected="true">
@@ -183,19 +206,24 @@
         <div class="rectangle mb-25">
           <div class="row mb-4">
             <h3 class="col-6 m-0">Pain Visualization Tool</h3>
-            <div class="col-6">
+            <div class="col-6 d-none d-md-block">
               <div class="btn btn-success float-right" id="saveCanvasBtn">Save</div>
             </div>
           </div>
-          <div class="d-flex justify-content-center">
-            <canvas id="painVisualTool" style="border:1px solid #000000;"></canvas>
+          <div class="d-block d-md-none">
+            <strong class='text-danger'>This feature is not supported on Mobile Phones.</strong>
           </div>
-          <div class="card mt-5">
-            <div class="card-body">
-              <h4 class="card-title">Tool Kit</h4>
-              <button id="clearCanvasBtn" class="btn btn-danger">Clear Canvas</button>
-              <input type="color" id="colorPicker" name="colorPicker" value="#e32400">
-              <label for="colorPicker">Change Brush Color</label>
+          <div class="d-none d-md-block">
+            <div class="d-flex justify-content-center">
+              <canvas id="painVisualTool" style="border:1px solid #000000;"></canvas>
+            </div>
+            <div class="card mt-5">
+              <div class="card-body">
+                <h4 class="card-title">Tool Kit</h4>
+                <button id="clearCanvasBtn" class="btn btn-danger">Clear Canvas</button>
+                <input type="color" id="colorPicker" name="colorPicker" value="#e32400" class="ml-0 ml-md-5 mt-3 mt-md-0">
+                <label for="colorPicker">Change Brush Color</label>
+              </div>
             </div>
           </div>
         </div>
@@ -211,6 +239,7 @@ import moment from 'moment';
 import { fabric } from 'fabric';
 import image from '@/assets/human-body.jpg';
 import VisitService from '../VisitService';
+import PatientService from '../PatientService';
 
 export default {
   name: 'Visit',
@@ -221,10 +250,11 @@ export default {
     // replace this with the mongodb query result
     id: '',
     visit_id: '',
+    patient_id: '',
     links: [
       {
-        name: 'Supporting Files',
-        dest: '/patient/visit/files',
+        name: 'Billings',
+        dest: '/billings',
       },
     ],
     soap: {
@@ -240,7 +270,7 @@ export default {
     },
     painVisual: '',
     visit_date: '-',
-    visit: {},
+    patient: '',
   }),
   async created() {
     this.loadData();
@@ -260,10 +290,13 @@ export default {
       VisitService.getVisitDetails(this.visit_id).then((visit) => {
         this.visit_date = moment(visit.createdAt).format('LLL');
         this.soap = visit;
+        this.patient_id = visit.patient;
         this.painVisual = visit.painVisual;
         this.visitInfo = visit;
         this.startFabric();
       });
+      const data = await PatientService.fetchPatientProfile(this.id);
+      this.patient = data;
     },
     editVisit() {
       $('#visitInfo').hide();
@@ -290,7 +323,6 @@ export default {
         selection: false,
         border: 10,
       });
-      console.log(`start fabric: ${this.painVisual}`);
       if (this.painVisual) {
         canvas.loadFromJSON(JSON.parse(this.painVisual), canvas.renderAll.bind(canvas));
       } else {
@@ -362,6 +394,12 @@ export default {
       } catch (err) {
         console.log(err);
       }
+    },
+    logout() {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('type');
+      localStorage.removeItem('fullname');
+      document.location.replace('/login');
     },
   },
 };

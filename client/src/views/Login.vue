@@ -48,12 +48,11 @@ export default {
         username: this.username,
         password: this.password,
       };
-
       LoginService.login(body)
         .then(() => {
-          const user = localStorage.getItem('isAdmin');
-          console.log('user is: ', user);
-          if (user === true) document.location.replace('/admin');
+          let user = localStorage.getItem('isAdmin');
+          user = (user === 'true');
+          if (user) document.location.replace('/admin');
           else document.location.replace('/');
         })
         .catch((err) => {
@@ -76,9 +75,18 @@ export default {
 
 .container {
   height: 60%;
-  width: 60%;
+  width: 80%;
   background: white;
   border-radius: 20px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    height: 60%;
+    width: 60%;
+    background: white;
+    border-radius: 20px;
+  }
 }
 
 .side {

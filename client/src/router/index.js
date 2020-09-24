@@ -83,11 +83,11 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath },
       });
     } else {
-      const user = localStorage.getItem('isAdmin');
-      console.log('isDmin', user);
+      let user = localStorage.getItem('isAdmin');
+      user = (user === 'true');
       if (to.matched.some((record) => record.meta.isAdmin)) {
         if (user === true) { // true = is an admin
-          console.log('one');
+          console.log(user);
           // next({ path: '/admin',
           // params: { nextUrl: to.fullPath }, });
           next();
