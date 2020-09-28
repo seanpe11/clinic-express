@@ -14,10 +14,12 @@ class PatientService {
             const { data } = res;
             /* eslint no-underscore-dangle: [2, { "allow": ["_id"] }] */
             resolve(
-              data.map((patient) => ({
-                ...patient,
-                link: `/patients/envelope/${patient._id}`,
-              })),
+              data.map((patient) => (
+                {
+                  ...patient,
+                  link: `/patients/envelope/${patient._id}`,
+                }
+              )),
             );
           });
       } catch (err) {

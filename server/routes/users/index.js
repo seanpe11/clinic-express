@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
     if(error) return res.status(400).json(error.details[0].message);
 
     let user = await User.findOne({ username: req.body.username });
-    if(user) return res.status(400).json('Username already registered');
+    if(user) return res.status(400).json('Email already registered');
 
     let hash = await bcrypt.hash(req.body.password, bcrypt.genSaltSync(10));
 
@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
         password: hash,
         first_name: req.body.first_name,
         last_name: req.body.last_name,
-        isAdmin: req.body.isAdmin
+        isAdmin: req.body.isAdmin,
     });
 
     if(!new_user) return res.status(500).json('Something went wrong while creating a new user');
@@ -33,10 +33,69 @@ router.post('/', async (req, res) => {
         token : token,
         first_name : new_user.first_name,
         last_name: new_user.last_name,
-        type: new_user.type,
+        isAdmin: new_user.isAdmin,
     }
 
-    res.json(responseObject);
+    res.status(200).send('User added');
+})
+
+router.get('/', (req, res) => {
+    User.find({}, 'createdAt updatedAt username first_name last_name isAdmin password', function(err, users) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(users);
+        }
+    })
+})
+
+router.put('/', async (req, res) => {
+    await User.findByIdAndUpdate(req.body._id, 
+        {   
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            isAdmin: req.body.isAdmin,
+            username: req.body.username,
+        }, function(err, user) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                if (user) {
+                    res.status(200).send('User updated');
+                } else {
+                    res.status(404).send('User not found');
+                }
+            }
+        })
+})
+
+router.put('/password', async (req, res) => {
+    let hash = await bcrypt.hash(req.body.password, bcrypt.genSaltSync(10));
+    await User.findByIdAndUpdate(req.body._id, { password: hash }, function (err, user){
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            if (user) {
+                res.status(200).send('Password changed');
+            } else {
+                res.status(404).send('User not found');
+            }
+        }
+    })
+})
+
+router.delete('/:id', async (req, res) => {
+    await User.findByIdAndDelete(req.params.id, function(err, byebye) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            if (byebye) {
+                res.status(200).send(`User ${byebye._id} deleted`)
+            } else {
+                res.status(404).send(`User not found`)
+            };
+        }
+    })
 })
 
 
@@ -45,8 +104,8 @@ function validateRequestBody (body) {
         first_name: Joi.string().min(2).max(20).required(),
         last_name: Joi.string().min(2).max(20).required(),
         password: Joi.string().min(6).max(20).required(),
-        username: Joi.string().min(6).max(20).required(),
-        type: Joi.boolean().required()
+        username: Joi.string().required(),
+        isAdmin: Joi.boolean().required()
     });
 
     return schema.validate(body);

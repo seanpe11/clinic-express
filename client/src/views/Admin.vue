@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 <template>
   <div class="home">
     <div class="row">
@@ -57,12 +58,12 @@
                   <div class="row">
                     <div class="col-md-5">
                       <label>First Name:</label>
-                      <input class="form-control" type="text" name="firstname" v-model="first_name" required />
+                      <input class="form-control" type="text" name="firstname" v-model="new_user.first_name" required />
                     </div>
 
                     <div class="col-md-5">
                       <label>Last Name:</label>
-                      <input class="form-control" type="text" name="lastname" v-model="last_name" required />
+                      <input class="form-control" type="text" name="lastname" v-model="new_user.last_name" required />
                     </div>
                   </div>
                   <br />
@@ -73,7 +74,7 @@
                       class="form-control"
                       type="text"
                       name="username"
-                      v-model="username"
+                      v-model="new_user.username"
                       required
                     />
                   </div>
@@ -88,17 +89,14 @@
                           class="form-control"
                           type="password"
                           name="password"
-                          v-model="password"
+                          v-model="new_user.password"
                           required
                         />
                       </div>
                       <div class="col-12 col-md-6">
-                        <label for="accountType">Type of Account:</label>
+                        <label for="accountType">Is Admin:</label>
                         <div class="form-group">
-                        <select id="inputState" class="form-control" v-model="isAdmin">
-                          <option selected>User</option>
-                          <option>Admin</option>
-                        </select>
+                        <input type="checkbox" class="form-checkbox" v-model="new_user.isAdmin">
                       </div>
                       </div>
                     </div>
@@ -106,27 +104,34 @@
                   <br>
                   <div class="form-group" v-if="errorMessage">
                     <div class="row text-center">
-                      <h4 style="color: red;">{{ errorMessage }}</h4>
+                      <h4 class="text-danger">{{ errorMessage }}</h4>
+                    </div>
+                  </div>
+                  <div class="form-group" v-if="successMessage">
+                    <div class="row text-center">
+                      <h4 class="text-success">{{ successMessage }}</h4>
                     </div>
                   </div>
                 </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="mb-25" data-dismiss="modal">Close</button>
-                <button type="button" class="mb-25" @click='savePatient'>Save</button>
+                <button type="button" class="mb-25" @click='addUser'>Save</button>
               </div>
             </div>
           </div>
         </div>
 
         <!-- FOR LOOP FOR PATIENT -->
-          <div v-for="patient in searchQuery()" :key="patient.name">
+          <div v-for="user in users" :key="user.username">
           <!-- TODO: FIX FONT-->
-            <div class="rectangle patient">
+            <div class="rectangle user">
             <div data-toggle="modal"
             data-target="#infoModal"
-            data-whatever="@mdo">
-              <div class="name">{{patient.name}}</div>
+            data-whatever="@mdo"
+            @click="setModal(user)">
+              <div class="name">{{user.first_name}} {{user.last_name}}</div>
+              <div>Username: {{user.username}}</div>
             </div>
             </div>
         </div>
@@ -153,66 +158,46 @@
                 <form>
                   <div class="row">
                   <!--TO DO: {{ user.first_name }}-->
-                    <tr><td class='header'>First Name:</td><td>First</td></tr>
+                  <div id="userInfo" v-if="!editing">
+                    <tr><td class='header'>First Name:</td><td>{{modaluser.first_name}}</td></tr>
                     <br>
-                    <tr><td class='header'>Last Name:</td><td>Last</td></tr>
+                    <tr><td class='header'>Last Name:</td><td>{{modaluser.last_name}}</td></tr>
                     <br>
-                    <tr><td class='header'>Username:</td><td>username@gmail.com</td></tr>
+                    <tr><td class='header'>Username:</td><td>{{modaluser.username}}</td></tr>
                     <br>
-                    <tr><td class='header'>Password:</td><td>pw</td></tr>
+                    <tr><td class='header'>Is Admin:</td><td><input type="checkbox" v-model="modaluser.isAdmin" disabled></td></tr>
+                  </div>
+                  <div id="userInfo" v-else>
+                    <tr><td class='header'>First Name:</td><td><input type="text" v-model="edituser.first_name"></td></tr>
+                    <br>
+                    <tr><td class='header'>Last Name:</td><td><input type="text" v-model="edituser.last_name"></td></tr>
+                    <br>
+                    <tr><td class='header'>Username:</td><td><input type="text" v-model="edituser.username"></td></tr>
+                    <br>
+                    <tr><td class='header'>Is Admin:</td><td><input type="checkbox" v-model="edituser.isAdmin"></td></tr>
+                  </div>
                   </div>
                   <br>
                   <div class="form-group" v-if="errorMessage">
                     <div class="row text-center">
-                      <h4 style="color: red;">{{ errorMessage }}</h4>
+                      <h4 class="text-danger">{{ errorMessage }}</h4>
                     </div>
                   </div>
-                </form>
-
-              </div>
-              <div class="modal-footer">
-              <!-- TO DO: @CLICK -->
-                <button type="button" class="mb-25">Delete</button>
-                <button type="button" class="mb-25">Edit</button>
-              </div>
-
-                          <!--EDIT ACCOUNT TO HIDE/SHOW-->
-<!--
-              // Edit Account Info
-              <div class="modal-content" id="editAccountInfo">
-              <div class="modal-header">
-               <h5 class="modal-title" id="infoModalLabel">Edit Account Information</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="row">
-                    <tr><td class='header'>First Name:</td><td><input type="text" v-model="user.first_name"/></td></tr>
-                    <br>
-                    <tr><td class='header'>Last Name:</td><td><input type="text" v-model="user.last_name"/></td></tr>
-                    <br>
-                    <tr><td class='header'>Username:</td><td><input type="text" v-model="user.username"/></td></tr>
-                    <br>
-                    <tr><td class='header'>Password:</td><td><input type="text" v-model="user.password"/></td></tr>
-                  </div>
-                  <br>
-                  <div class="form-group" v-if="errorMessage">
+                  <div class="form-group" v-if="successMessage">
                     <div class="row text-center">
-                      <h4 style="color: red;">{{ errorMessage }}</h4>
+                      <h4 class="text-success">{{ successMessage }}</h4>
                     </div>
                   </div>
                 </form>
-
               </div>
-              <div class="modal-footer">
-              // TO DO: @CLICK
-                <button type="button" class="mb-25">Cancel</button>
-                <button type="button" class="mb-25">Save</button>
+              <div class="modal-footer" v-if="!editing">
+                <button type="button" class="mb-25" @click="deleteUser">Delete</button>
+                <button type="button" class="mb-25" @click="edittoggle">Edit</button>
               </div>
-            </div> -->
-
+              <div class="modal-footer" v-else>
+                <button type="button" class="mb-25" @click="saveedit">Save</button>
+                <button type="button" class="mb-25" @click="edittoggle">Cancel</button>
+              </div>
             </div>
           </div>
         </div>
@@ -224,7 +209,7 @@
 <script>
 // @ is an alias to /src
 import Sidebar from '@/components/Sidebar.vue';
-import PatientService from '../PatientService';
+import AdminService from '../AdminService';
 
 export default {
   name: 'Admin',
@@ -239,7 +224,8 @@ export default {
     isAdmin: '',
     search: '',
     errorMessage: '',
-    // replace this array to the results of a mongodb query
+    successMessage: '',
+    // replace this a.rray to the results of a mongodb query
     links: [
       {
         name: 'Accounts',
@@ -250,33 +236,32 @@ export default {
         dest: '/billing',
       },
     ],
-    patients: [],
+    users: [],
+    modaluser: {},
+    new_user: {},
+    edituser: {},
+    editing: false,
   }),
   async created() {
-    try {
-      this.patients = await PatientService.getPatients(this.search);
-    } catch (err) {
-      console.log(err);
-    }
+    this.loadUsers();
   },
   methods: {
-    async savePatient() {
-      this.errorMessage = '';
-      const newPatient = {
-        first_name: this.first_name,
-        last_name: this.last_name,
-        username: this.username,
-        password: this.password,
-        isAdmin: this.isAdmin,
-      };
-      console.log(newPatient);
-      PatientService.createPatient(newPatient).then(() => {
-        document.location.reload();
-      }).catch((err) => {
-        if (err.response.status) {
-          this.errorMessage = err.response.data;
-        }
-      });
+    async loadUsers() {
+      try {
+        this.users = await AdminService.getUsers();
+      } catch (err) {
+        this.errorMessage(err);
+      }
+    },
+    async addUser() {
+      AdminService.addUser(this.new_user)
+        .then((res) => {
+          this.successMessage = res.data;
+        })
+        .catch((err) => {
+          this.errorMessage = err;
+        });
+      this.loadUsers();
     },
     searchQuery() {
       try {
@@ -284,7 +269,7 @@ export default {
           return this.patients.filter((item) => this.search.toLowerCase().split(' ').every((v) => item.name.toLowerCase().includes(v)));
         }
       } catch (err) {
-        console.log(err);
+        this.errorMessage = err;
       }
       return this.patients;
     },
@@ -293,6 +278,45 @@ export default {
       localStorage.removeItem('type');
       localStorage.removeItem('fullname');
       document.location.replace('/login');
+    },
+    setModal(user) {
+      this.modaluser = user;
+      this.successMessage = '';
+      this.errorMessage = '';
+    },
+    edittoggle() {
+      const user = {}; // for cancel purposes. for some reason, this.edituser = this.modaluser creates a binding.
+      user.first_name = this.modaluser.first_name;
+      user.last_name = this.modaluser.last_name;
+      user.username = this.modaluser.username;
+      user.isAdmin = this.modaluser.isAdmin;
+      user._id = this.modaluser._id;
+      this.edituser = user;
+      this.editing = !this.editing;
+    },
+    saveedit() {
+      this.editing = false;
+      AdminService.editUser(this.edituser)
+        .then((res) => {
+          this.successMessage = res.data;
+        })
+        .catch((err) => {
+          this.errorMessage = err;
+        });
+      this.setModal(this.edituser);
+      this.loadUsers();
+    },
+    deleteUser() {
+      const user = {};
+      user._id = this.modaluser._id;
+      AdminService.deleteUser(user._id)
+        .then((res) => {
+          this.loadUsers();
+          console.log(res.data);
+        })
+        .catch((err) => {
+          this.errorMessage = err;
+        });
     },
   },
 };
@@ -303,7 +327,7 @@ export default {
   text-decoration: none;
   color: black;
 }
-.patient {
+.user {
   text-align: left;
   margin-bottom: 0.25in;
 }
@@ -312,13 +336,12 @@ export default {
   box-shadow: none;
 }
 
-.patient > .name {
-  font-size: 24px;
-  float: left;
+.name {
+  font-size: 18px;
   font-weight: bold;
 }
 
-.patient > .lastVisit {
+.user > .lastVisit {
   font-size: 12px;
   text-align: right;
   color: #737373;
