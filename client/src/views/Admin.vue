@@ -174,6 +174,8 @@
                     <br>
                     <tr><td class='header'>Username:</td><td><input type="text" v-model="edituser.username"></td></tr>
                     <br>
+                    <tr><td class='header'>Password:</td><td><input type="text" v-model="edituser.password"></td></tr>
+                    <br>
                     <tr><td class='header'>Is Admin:</td><td><input type="checkbox" v-model="edituser.isAdmin"></td></tr>
                   </div>
                   </div>
