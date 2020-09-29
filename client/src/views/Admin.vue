@@ -116,7 +116,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="mb-25" data-dismiss="modal">Close</button>
-                <button type="button" class="mb-25" @click='addUser'>Save</button>
+                <button type="button" class="mb-25" @click="addUser">Add</button>
               </div>
             </div>
           </div>
@@ -268,12 +268,12 @@ export default {
     searchQuery() {
       try {
         if (this.search) {
-          return this.patients.filter((item) => this.search.toLowerCase().split(' ').every((v) => item.name.toLowerCase().includes(v)));
+          return this.user.filter((item) => this.search.toLowerCase().split(' ').every((v) => item.name.toLowerCase().includes(v)));
         }
       } catch (err) {
         this.errorMessage = err;
       }
-      return this.patients;
+      return this.user;
     },
     logout() {
       localStorage.removeItem('jwt');
