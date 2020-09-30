@@ -5,4 +5,5 @@ module.exports = Object.freeze({
     visits: require('./visits'),
     users: require('./users'),
     // files: require('./files'),
+    billings: require('./billings'),
 })

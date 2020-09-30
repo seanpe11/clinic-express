@@ -1,6 +1,5 @@
 'use strict';
 
-const Joi = require('joi');
 const router = require('express').Router();
 
 const Billing = require("../../models").billings;
