@@ -125,11 +125,10 @@
         <!-- FOR LOOP FOR PATIENT -->
           <div v-for="user in users" :key="user.username">
           <!-- TODO: FIX FONT-->
-            <div class="rectangle user">
+            <div class="rectangle user" @click="setModal(user)">
             <div data-toggle="modal"
             data-target="#infoModal"
-            data-whatever="@mdo"
-            @click="setModal(user)">
+            data-whatever="@mdo">
               <div class="name">{{user.first_name}} {{user.last_name}}</div>
               <div>Username: {{user.username}}</div>
             </div>
@@ -229,14 +228,10 @@ export default {
     successMessage: '',
     // replace this a.rray to the results of a mongodb query
     links: [
-      {
-        name: 'Accounts',
-        dest: '/admin',
-      },
-      {
-        name: 'Billing',
-        dest: '/billing',
-      },
+      // {
+      //   name: 'Accounts',
+      //   dest: '/admin',
+      // },
     ],
     users: [],
     modaluser: {},
@@ -258,12 +253,13 @@ export default {
     async addUser() {
       AdminService.addUser(this.new_user)
         .then((res) => {
+          this.editing = false;
           this.successMessage = res.data;
+          document.location.reload();
         })
         .catch((err) => {
           this.errorMessage = err;
         });
-      this.loadUsers();
     },
     searchQuery() {
       try {
@@ -313,8 +309,8 @@ export default {
       user._id = this.modaluser._id;
       AdminService.deleteUser(user._id)
         .then((res) => {
-          this.loadUsers();
           console.log(res.data);
+          document.location.reload();
         })
         .catch((err) => {
           this.errorMessage = err;

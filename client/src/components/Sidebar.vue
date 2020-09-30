@@ -2,12 +2,11 @@
     <div id="sidebar" class='col-2 d-none d-md-block'>
         <div id="nav" class='position-fixed' style='width: inherit;'>
             <h4>Jamalul Surgical and Medical Clinic</h4>
-            <button class="btn" @click="logout()">Logout</button>
+
             <div v-if="name != 'null'" id="name">
                 <span>Patient Name</span>
                 <h3>{{ name }}</h3>
             </div>
-
             <div id="links">
                 <div v-for="link in links" :key='link.name'>
                     <router-link :to="link.dest">{{link.name}}</router-link>
@@ -15,8 +14,12 @@
             </div>
         </div>
         <footer class='fixed-bottom'>
-            <a href="https://github.com/jolocansana/clinic-express">Clinic Express</a> <br/>
-            Made with ❤️ by JNRDS.
+          <div id="user" class='mb-4'>
+            <h5><strong> Logged on as: </strong> <br/> {{ user }}</h5>
+            <button class="btn btn-warning mb-3" @click="logout()">Logout</button>
+          </div>
+          <a href="https://github.com/jolocansana/clinic-express">Clinic Express</a> <br/>
+          Made with ❤️ by JNRDS.
         </footer>
     </div>
 </template>
@@ -28,6 +31,9 @@ export default {
     name: String,
     links: Array,
   },
+  data: () => ({
+    user: localStorage.getItem('fullname'),
+  }),
   methods: {
     logout() {
       localStorage.removeItem('jwt');
@@ -58,11 +64,11 @@ footer {
     margin-top: .5in;
 }
 
-#links {
+#user {
     margin-top: .5in;
 }
 
-.btn {
-    padding-left: 0px;
+#links {
+    margin-top: .5in;
 }
 </style>

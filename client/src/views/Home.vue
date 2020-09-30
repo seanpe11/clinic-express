@@ -218,13 +218,9 @@ export default {
     search: '',
     errorMessage: '',
     // replace this array to the results of a mongodb query
-    links: [
-      {
-        name: 'Billings',
-        dest: '/billings',
-      },
-    ],
+    links: [],
     patients: [],
+    user: localStorage.getItem('fullname'),
   }),
   async created() {
     try {

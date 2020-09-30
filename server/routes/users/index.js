@@ -9,11 +9,11 @@ const User = require('../../models').users;
 const router = require('express').Router();
 
 router.post('/', async (req, res) => {
-    let { error } = validateRequestBody(req.body);
-    if(error) return res.status(400).json(error.details[0].message);
+    // let { error } = validateRequestBody(req.body);
+    // if(error) return res.status(400).json(error.details[0].message);
 
     let user = await User.findOne({ username: req.body.username });
-    if(user) return res.status(400).json('Email already registered');
+    if(user) return res.status(400).json('Username already registered');
 
     let hash = await bcrypt.hash(req.body.password, bcrypt.genSaltSync(10));
 
@@ -87,13 +87,9 @@ router.put('/password', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     await User.findByIdAndDelete(req.params.id, function(err, byebye) {
         if (err) {
-            res.status(500).send(err);
+          res.status(500).send(err);
         } else {
-            if (byebye) {
-                res.status(200).send(`User ${byebye._id} deleted`)
-            } else {
-                res.status(404).send(`User not found`)
-            };
+          res.status(200).send('user deleted');
         }
     })
 })

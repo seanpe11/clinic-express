@@ -261,12 +261,7 @@ export default {
     // marital_status: '',
     // height: '',
     patient: {},
-    links: [
-      {
-        name: 'Billings',
-        dest: '/billings',
-      },
-    ],
+    links: [],
     visits: [],
     activeBtn: 'Subject',
     subject: '',

@@ -253,8 +253,8 @@ export default {
     patient_id: '',
     links: [
       {
-        name: 'Billings',
-        dest: '/billings',
+        name: 'Supporting Files',
+        dest: '/patient/visit/files',
       },
     ],
     soap: {
