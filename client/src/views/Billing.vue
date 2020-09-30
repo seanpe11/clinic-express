@@ -103,6 +103,7 @@
 <script>
 // @ is an alias to /src
 import Sidebar from '@/components/Sidebar.vue';
+import BillingService from '../BillingService';
 
 export default {
   name: 'Billing',
@@ -110,6 +111,13 @@ export default {
     Sidebar,
   },
   data: () => ({
+
+    service: '',
+    price: '',
+    note: '',
+
+    service_arr = [],
+
     links: [
       {
         name: 'Accounts',
