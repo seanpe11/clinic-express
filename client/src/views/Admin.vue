@@ -147,7 +147,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click='safeClose'>
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -196,7 +196,7 @@
               </div>
               <div class="modal-footer" v-else>
                 <button type="button" class="mb-25" @click="saveedit">Save</button>
-                <button type="button" class="mb-25" @click="edittoggle">Cancel</button>
+                <button type="button" class="mb-25" @click="safeClose">Cancel</button>
               </div>
             </div>
           </div>
@@ -209,6 +209,7 @@
 <script>
 // @ is an alias to /src
 import Sidebar from '@/components/Sidebar.vue';
+// import $ from 'jquery';
 import AdminService from '../AdminService';
 
 export default {
@@ -277,6 +278,7 @@ export default {
       document.location.replace('/login');
     },
     setModal(user) {
+      this.editing = false;
       this.modaluser = user;
       this.successMessage = '';
       this.errorMessage = '';
@@ -302,6 +304,9 @@ export default {
         });
       this.setModal(this.edituser);
       this.loadUsers();
+    },
+    safeClose() {
+      this.editing = !this.editing;
     },
     deleteUser() {
       const user = {};
