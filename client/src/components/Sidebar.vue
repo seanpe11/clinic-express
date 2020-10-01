@@ -1,7 +1,14 @@
 <template>
     <div id="sidebar" class='col-2 d-none d-md-block'>
         <div id="nav" class='position-fixed' style='width: inherit;'>
-            <h4>Jamalul Surgical and Medical Clinic</h4>
+            <div class="row">
+              <div class="col-12 col-lg-3 my-auto mx-auto">
+                <img src='@/assets/logo.png' height='60px'/>
+              </div>
+              <div class="col-12 col-lg-9">
+                <h4>Jamalul Surgical and Medical Clinic</h4>
+              </div>
+            </div>
 
             <div v-if="name != 'null'" id="name">
                 <span>Patient Name</span>

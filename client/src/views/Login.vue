@@ -3,7 +3,8 @@
     <div class="row h-100">
       <div class="container mx-auto my-auto">
         <div class="row h-100">
-          <div class="d-none d-md-block col-md-6 side">side</div>
+          <div class="d-none d-md-block col-md-6 side" id='photoSide'>
+          </div>
           <div class="col-12 col-md-6 login-content my-auto">
             <div class="login-body mx-auto">
               <h1>LOGIN</h1>
@@ -71,6 +72,11 @@ export default {
 <style>
 .login {
   height: 100vh;
+}
+
+#photoSide {
+  background-image: url("../assets/clinic-stock.jpg");
+  background-size: cover;
 }
 
 .container {
