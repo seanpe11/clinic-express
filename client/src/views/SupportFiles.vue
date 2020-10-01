@@ -18,18 +18,21 @@
               <h3 class='col-6'>Supporting Files</h3>
           </div>
           <div class='w-100 px-3'>
-            <div class="row mt-2" v-for='file in files' :key='file.filename'>
-              <div class="col-9"><button class='btn border-primary' @click="showFile(file)">{{file.filename}}</button></div>
+            <div class="row mt-2 round-border" v-for='file in files' :key='file.filename'>
+              <div class="col-9"><button class='btn w-100 text-left' @click="showFile(file)">{{file.filename}}</button></div>
               <div class="col-3"><button class='btn btn-danger float-right' @click="deleteFile(file._id)">Delete</button></div>
             </div>
           </div>
           <div v-if="files.length == 0">
             No Files Yet!
           </div>
-          <div>
-            <input type="file" id="uploadForm" accept="image/*">
-            <button class='add-btn col-6 mt-3 ml-3' @click="uploadFile"> + Upload File </button>
-          </div>
+          <div class="card mt-5">
+              <div class="card-body">
+                <h4 class="card-title">Upload File</h4>
+                  <input type="file" class='form-control-file my-auto' id="uploadForm" accept="image/*">
+                  <button class='btn btn-success' @click="uploadFile"> + Upload File </button>
+              </div>
+            </div>
         </div>
       </div>
     </div>
@@ -109,6 +112,16 @@ export default {
 
 #content {
   padding: .25in .5in;
+}
+
+.round-border {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.round-border:hover {
+  background-color: lightgrey;
 }
 
 .breadcrumb {
