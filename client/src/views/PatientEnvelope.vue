@@ -43,7 +43,7 @@
             </div>
             <div class='row mb-2' v-for='(address, index) in patient.address' :key='address._id'>
               <div class="col-12 col-md-3"><strong>Address {{index+1}}</strong></div>
-              <div class="col-12 col-md-9">{{address.street}}, {{address.city}}, {{address.province}}</div>
+              <div class="col-12 col-md-9" v-if='address.street != "Default"'>{{address.street}}, {{address.city}}, {{address.province}}</div>
             </div>
             <div class='row mb-2'>
               <div class="col-12 col-md-3"><strong>Date of Birth</strong></div>

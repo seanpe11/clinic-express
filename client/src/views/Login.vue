@@ -3,7 +3,16 @@
     <div class="row h-100">
       <div class="container mx-auto my-auto">
         <div class="row h-100">
-          <div class="d-none d-md-block col-md-6 side" id='photoSide'>
+          <div class="d-none d-md-flex col-md-6 side">
+            <div class="row my-auto mx-auto">
+              <div class="col-3 my-auto mx-auto">
+                <img src='@/assets/logo.png' height='100px'/>
+              </div>
+              <div class="col-9 my-auto">
+                <h3>Jamalul Surgical and Medical Clinic</h3>
+                <span>Powered by Clinic Express</span>
+              </div>
+            </div>
           </div>
           <div class="col-12 col-md-6 login-content my-auto">
             <div class="login-body mx-auto">
@@ -72,11 +81,6 @@ export default {
 <style>
 .login {
   height: 100vh;
-}
-
-#photoSide {
-  background-image: url("../assets/clinic-stock.jpg");
-  background-size: cover;
 }
 
 .container {

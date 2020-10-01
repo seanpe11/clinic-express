@@ -270,7 +270,7 @@ export default {
     this.loadData();
     this.links.push({
       name: 'Supporting Files',
-      dest: `/patient/visit/${this.visit_id}/files`,
+      dest: `/patients/visits/${this.id}/${this.visit_id}/files`,
     });
   },
   mounted() {
