@@ -16,6 +16,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'linebreak-style': 'off',
     'indent': 'off',
+    'no-new': 'off',
     'max-len': ['error', { code: 200 }],
   },
 };

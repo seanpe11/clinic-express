@@ -5,24 +5,25 @@ const url = 'http://localhost:5000/api/files';
 class FileService {
   static getFiles(visitId) {
       return new Promise((resolve, reject) => {
-        try {
           axios.get(`${url}/${visitId}`)
             .then((res) => {
               resolve(res);
+            })
+            .catch((err) => {
+                reject(err);
             });
-        } catch (err) {
-          reject(err);
-        }
-      });
+        });
   }
 
   static addFile(visitId, file) {
     return new Promise((resolve, reject) => {
         try {
-            axios.post(`${url}/${visitId}`, file)
-              .then((res) => {
-                resolve(res);
-              });
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+            axios.post(`${url}/${visitId}`, formData)
+                .then((res) => {
+                    resolve(res);
+                });
           } catch (err) {
             reject(err);
           }

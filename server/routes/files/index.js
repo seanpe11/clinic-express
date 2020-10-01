@@ -1,9 +1,12 @@
+const router = require('express').Router();
 const Files = require('../../models').files;
+const fileUpload = require('express-fileupload');
+
 
 // Get files from Visit id
 router.get('/:id', async (req, res) => {
   try {
-      let files = await Files.findOne({ visitID: req.params.id });
+      let files = await Files.find({ visitID: req.params.id });
       if(!files) return res.status(400).json('Files not found');
       res.json(files);
   } catch (err) {
@@ -13,16 +16,15 @@ router.get('/:id', async (req, res) => {
 });
 
 // Post new req.bidy as file to Visit id
-router.post('/:id', async (req, res) => {
+router.post('/:id', fileUpload(), async (req, res) => {
   // Code here
   try {
-      let file = new Files();
-      
-      file.filename = req.body.filename;
-      file.visitID = req.params.id;
-      file.filedata = req.body.filedata;
+      const newFile = {}
+      newFile.filename = req.files.file.name;
+      newFile.visitID = req.params.id;
+      newFile.filedata = req.files.file;
 
-      await visit.save();
+      await Files.create(newFile);
 
       res.status(200).send('ok');
   } catch (err) {
@@ -41,3 +43,5 @@ router.delete('/:id', async(req, res) => {
       return res.status(500);
   }
 })
+
+module.exports = router;

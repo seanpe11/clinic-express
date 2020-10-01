@@ -11,17 +11,26 @@
           <li class="breadcrumb-item" aria-current="page"><a href="/patient/visit">Visit Record</a></li>
           <li class="breadcrumb-item active" aria-current="page">Supporting Files</li>
         </ol>
-        <div class="rectangle mb-25">
+        <div class="rectangle mb-2">
           Friday - August 13, 2020
         </div>
-        <div class="rectangle mg-25">
-          <div class="row mb-25">
+        <div class="rectangle mg-2">
+          <div class="row mb-2">
               <h2 class='col-6'>Supporting Files</h2>
-              <button class='add-btn col-6'> + Upload File </button>
           </div>
-          <ul class="list-group">
-            <li class="list-group-item" v-for="file in files" :key='file.filename'><button>{{file.filename}}</button></li>
-          </ul>
+          <div class='w-100 px-3'>
+            <div class="row mt-2" v-for='file in files' :key='file.filename'>
+              <div class="col-9"><button class='btn border-primary'>{{file.filename}}</button></div>
+              <div class="col-3"><button class='btn btn-danger float-right' @click="deleteFile(file._id)">Delete</button></div>
+            </div>
+          </div>
+          <div v-if="files.length == 0">
+            No Files Yet!
+          </div>
+          <div>
+            <input type="file" id="uploadForm" accept="image/*">
+            <button class='add-btn col-6 mt-3 ml-3' @click="uploadFile"> + Upload File </button>
+          </div>
         </div>
       </div>
     </div>
@@ -31,6 +40,7 @@
 <script>
 /* eslint-env jquery */
 import Sidebar from '@/components/Sidebar.vue';
+import FileService from '../FileService';
 
 export default {
   name: 'SupportFile',
@@ -45,18 +55,34 @@ export default {
       },
     ],
     // replace this with the mongodb query result
-    files: [
-      {
-        filename: 'File 1.jpg',
-      },
-      {
-        filename: 'File 2.jpg',
-      },
-      {
-        filename: 'File 3.jpg',
-      },
-    ],
+    files: [],
+    visit_id: '',
   }),
+  created() {
+    this.visit_id = this.$route.params.visit_id;
+    this.loadFiles();
+  },
+  methods: {
+    async loadFiles() {
+      FileService.getFiles(this.visit_id)
+      .then((res) => {
+        this.files = res.data;
+      })
+      .catch(() => {
+        this.files = null;
+      });
+    },
+    async uploadFile() {
+      const file = $('#uploadForm').prop('files')[0];
+
+      await FileService.addFile(this.visit_id, file);
+      this.loadFiles();
+    },
+    async deleteFile(id) {
+      await FileService.deleteFile(id);
+      this.loadFiles();
+    },
+  },
 };
 
 </script>
@@ -86,6 +112,6 @@ export default {
 .add-btn {
     border: none;
     background: transparent;
-    text-align: right;
+    text-align: left;
 }
 </style>
