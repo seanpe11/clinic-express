@@ -251,12 +251,7 @@ export default {
     id: '',
     visit_id: '',
     patient_id: '',
-    links: [
-      {
-        name: 'Supporting Files',
-        dest: '/patient/visit/files',
-      },
-    ],
+    links: [],
     soap: {
       subject: 'Subjective',
       object: 'Objective',
@@ -274,6 +269,10 @@ export default {
   }),
   async created() {
     this.loadData();
+    this.links.push({
+      name: 'Supporting Files',
+      dest: `/patient/visit/${this.visit_id}/files`,
+    });
   },
   mounted() {
     $('#editingSub').hide();
