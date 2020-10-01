@@ -61,7 +61,7 @@ const routes = [
     },
   },
   {
-    path: '/patient/visit/files',
+    path: '/patient/visit/:visit_id/files',
     component: () => import('../views/SupportFiles.vue'),
     meta: {
       requiresAuth: true,
