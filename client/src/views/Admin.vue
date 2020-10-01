@@ -298,12 +298,12 @@ export default {
       AdminService.editUser(this.edituser)
         .then((res) => {
           this.successMessage = res.data;
+          document.location.reload();
         })
         .catch((err) => {
           this.errorMessage = err;
         });
       this.setModal(this.edituser);
-      this.loadUsers();
     },
     safeClose() {
       this.editing = !this.editing;
