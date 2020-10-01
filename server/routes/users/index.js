@@ -85,7 +85,7 @@ router.put('/password', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
-    await User.findByIdAndDelete(req.params.id, function(err, byebye) {
+    await User.findByIdAndDelete(req.params.id, function(err) {
         if (err) {
           res.status(500).send(err);
         } else {

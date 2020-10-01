@@ -15,7 +15,6 @@
           <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav mr-auto mt-2 mt-md-0">
               <li class="nav-item">
-                <a class="nav-link" href="/billing">Edit Billings</a>
                 <a class="nav-link" href="" v-on:click="logout()">Logout</a>
               </li>
             </ul>
@@ -321,6 +320,10 @@ export default {
 </script>
 
 <style scoped>
+.home {
+  height: 100vh !important;
+}
+
 .router-link {
   text-decoration: none;
   color: black;
