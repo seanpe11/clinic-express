@@ -1,7 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 
-const url = 'http://localhost:5000/api/patients';
+const url = 'api/patients';
 
 class PatientService {
   static getPatients(search) {

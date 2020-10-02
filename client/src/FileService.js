@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:5000/api/files';
+const url = 'api/files';
 
 class FileService {
   static getFiles(visitId) {
